@@ -11,7 +11,7 @@ Unity Download: https://unity.com/download
 Then, ensure you have Git installed on your machine and run the following commands within your project folder:
 
 ```
-git clone https://gitlab.com/lambert-stem-in-space/nasa-adc-2025.git
+git clone https://gitlab.com/lambert-stem-in-space/lambert-adc-2025.git
 cd nasa-adc-2025
 ```
 
