@@ -8,14 +8,14 @@ public class CameraControl : MonoBehaviour
     [SerializeField] float sprintMultiplier;
     [SerializeField] float cameraSensitivity;
 
-    private Camera camera;
+    [SerializeField] private Camera camera;
     private Vector3 anchorPoint;
     private Quaternion anchorRot;
 
-    private void Start()
+    /*private void Start()
     {
         camera = GetComponent<Camera>();
-    }
+    }*/
 
     void Update()
     {
