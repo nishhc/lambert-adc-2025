@@ -12,7 +12,7 @@ Then, ensure you have Git installed on your machine and run the following comman
 
 ```
 git clone https://gitlab.com/lambert-stem-in-space/lambert-adc-2025.git
-cd nasa-adc-2025
+cd lambert-adc-2025
 ```
 
 ## Roadmap
