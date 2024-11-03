@@ -204,6 +204,7 @@ MonoBehaviour:
   movementSpeed: 2
   sprintMultiplier: 1.5
   cameraSensitivity: 0.1
+  camera: {fileID: 309870291}
 --- !u!1 &221963688
 GameObject:
   m_ObjectHideFlags: 0
@@ -957,13 +958,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   points:
-  - {x: 0, y: 0, z: 0}
-  - {x: 30, y: 10, z: -10}
-  - {x: -10, y: 0, z: 5}
-  - {x: 0, y: 20, z: -4}
-  - {x: 20, y: 10, z: 30}
-  - {x: 0, y: 0, z: 0}
+  - position: {x: 0, y: 0, z: 0}
+    velocity: {x: 0, y: 0, z: 0}
+  - position: {x: 20, y: 20, z: 20}
+    velocity: {x: 20, y: 20, z: 20}
+  - position: {x: -10, y: 0, z: -10}
+    velocity: {x: 20, y: 10, z: 20}
   lineManager: {fileID: 1014513153}
+  positionPoints: []
+  velocityPoints: []
 --- !u!1 &1572676152
 GameObject:
   m_ObjectHideFlags: 0
@@ -1011,9 +1014,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b19e1f49f04e350468c9c23af7a2d52c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 30
-  rotateSpeed: 0.5
-  pointUpdateDistanceThreshold: 0
+  targetPos: {x: 0, y: 0, z: 0}
+  index: 0
+  velocityX: 0
+  velocityY: 0
+  velocityZ: 0
+  rotateSpeed: 20
+  pointUpdateDistanceThreshold: 0.1
   pointManager: {fileID: 1558956566}
   pathLineManager: {fileID: 221963691}
   trackingLineManager: {fileID: 310754920}

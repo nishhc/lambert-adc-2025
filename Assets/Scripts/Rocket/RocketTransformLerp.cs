@@ -5,10 +5,12 @@ using UnityEngine;
 public class RocketTransformLerp : MonoBehaviour
 {
 
-    private Vector3 targetPos;
-    private int index = 0;
+    [SerializeField] private Vector3 targetPos;
+    [SerializeField] private int index = 0;
 
-    [SerializeField] private float movementSpeed;
+    [SerializeField] private float velocityX;
+    [SerializeField] private float velocityY;
+    [SerializeField] private float velocityZ;
     [SerializeField] private float rotateSpeed;
     [SerializeField] private float pointUpdateDistanceThreshold;
 
@@ -20,7 +22,11 @@ public class RocketTransformLerp : MonoBehaviour
     private void Start()
     {
         index = 0;
-        targetPos = pointManager.points[index];
+        targetPos = pointManager.positionPoints[index];
+
+        velocityX = pointManager.velocityPoints[index].x;
+        velocityY = pointManager.velocityPoints[index].y;
+        velocityZ = pointManager.velocityPoints[index].z;
     }
 
     void Update()
@@ -33,7 +39,10 @@ public class RocketTransformLerp : MonoBehaviour
     {
         if (Vector3.Distance(transform.position, targetPos) != 0)
         {
-            transform.position = Vector3.Lerp(transform.position, targetPos, (movementSpeed * Time.deltaTime) / Vector3.Distance(transform.position, targetPos));
+            transform.position = new Vector3(                       Mathf.Lerp(transform.position.x, targetPos.x, (velocityX * Time.deltaTime) 
+                / Vector3.Distance(transform.position, targetPos)), Mathf.Lerp(transform.position.y, targetPos.y, (velocityY * Time.deltaTime)
+                / Vector3.Distance(transform.position, targetPos)), Mathf.Lerp(transform.position.z, targetPos.z, (velocityZ * Time.deltaTime)
+                / Vector3.Distance(transform.position, targetPos)));
             if (Vector3.Distance(transform.position, targetPos) <= pointUpdateDistanceThreshold)
             {
                 SetPoint();
@@ -42,7 +51,7 @@ public class RocketTransformLerp : MonoBehaviour
         else if (index < (pointManager.points.Length - 1))
         {
             Debug.LogWarning("Distance to the point is 0- cannot divide speed by the distance if it is 0 so running code without speed compensation");
-            transform.position = Vector3.Lerp(transform.position, targetPos, (movementSpeed * Time.deltaTime) / Vector3.Distance(transform.position, targetPos));
+            transform.position = Vector3.Lerp(transform.position, targetPos, (velocityX * Time.deltaTime)/* / Vector3.Distance(transform.position, targetPos)*/);
             if (Vector3.Distance(transform.position, targetPos) <= pointUpdateDistanceThreshold)
             {
                 SetPoint();
@@ -72,7 +81,10 @@ public class RocketTransformLerp : MonoBehaviour
         if (index < (pointManager.points.Length - 1))
         {
             index += 1;
-            targetPos = pointManager.points[index];
+            targetPos = pointManager.positionPoints[index];
+            velocityX = pointManager.velocityPoints[index].x;
+            velocityY = pointManager.velocityPoints[index].y;
+            velocityZ = pointManager.velocityPoints[index].z;
         }
     }
 }

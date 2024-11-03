@@ -7,43 +7,42 @@ public class CSV_Parser : MonoBehaviour
     List<Dictionary<string, int>> flightData = new List<Dictionary<string, int>>();
     void Awake()
     {
-        flightData = GetDataFromCSV('csv_data.csv')
+        flightData = GetDataFromCSV("csv_data.csv");
     }
 
     //Returns a list of dictionaries that stores all flight data
     //Each entry of the the list is a dictionary that stores all information about the flight at at a given time
-    List<Dictionary<string, int>> GetDataFromCSV(filename)
+    List<Dictionary<string, int>> GetDataFromCSV(string filename)
     {
-        var dataFile = Resources.Load<TextAsset>('csv_data.csv'); //Loads data from file
-        var dataLines = dataset.text.Split('\n'); //Returns list where each entry is a row of data
-        dataLines.removeAt(0) //Removes header information from data
-        var data = new List<Dictionary<string, int>>() //Creates empty list of data
-        foreach (String line in dataLines)
+        var dataFile = Resources.Load<TextAsset>(filename); //Loads data from file
+        var dataLines = dataFile.text.Split("\n"); //Returns list where each entry is a row of data
+        var data = new List<Dictionary<string, int>>(); //Creates empty list of data
+        foreach (string line in dataLines)
         {
-            var values = line.Split(',');
+            var values = line.Split(",");
             var data_dict = new Dictionary<string, int> {
-                {'MISSION_ELAPSED_TIME' : values[0]},
-                { 'ROTATION_X' : values[1]},
-                { 'ROTATION_Y' : values[2]},
-                { 'ROTATION_Z' : values[3]},
-                { 'VELOCITY_X' : values[4]},
-                { 'VELOCITY_Y' : values[5]},
-                { 'VELOCITY_Z' : values[6]},
-                { 'MASS' : values[7]},
-                { 'EARTH_ROTATION_X' : values[8]},
-                { 'EARTH_ROTATION_Y' : values[9]},
-                { 'EARTH_ROTATION_X' : values[10]},
-                { 'EARTH_VELOCITY_X' : values[11]},
-                { 'EARTH_VELOCITY_Y' : values[12]},
-                { 'EARTH_VELOCITY_Z' : values[13]},
-                { 'MOON_ROTATION_X' : values[14]},
-                { 'MOON_ROTATION_Y' : values[15]},
-                { 'MOON_ROTATION_X' : values[16]},
-                { 'MOON_VELOCITY_X' : values[17]},
-                { 'MOON_VELOCITY_Y' : values[18]},
-                { 'MOON_VELOCITY_Z' : values[19]},
+                { "MISSION_ELAPSED_TIME", int.Parse(values[0])},
+                { "ROTATION_X", int.Parse(values[1])},
+                { "ROTATION_Y", int.Parse(values[2])},
+                { "ROTATION_Z", int.Parse(values[3])},
+                { "VELOCITY_X", int.Parse(values[4])},
+                { "VELOCITY_Y", int.Parse(values[5])},
+                { "VELOCITY_Z", int.Parse(values[6])},
+                { "MASS", int.Parse(values[7])},
+                { "EARTH_ROTATION_X", int.Parse(values[8])},
+                { "EARTH_ROTATION_Y", int.Parse(values[9])},
+                { "EARTH_ROTATION_X", int.Parse(values[10])},
+                { "EARTH_VELOCITY_X", int.Parse(values[11])},
+                { "EARTH_VELOCITY_Y", int.Parse(values[12])},
+                { "EARTH_VELOCITY_Z", int.Parse(values[13])},
+                { "MOON_ROTATION_X", int.Parse(values[14])},
+                { "MOON_ROTATION_Y", int.Parse(values[15])},
+                { "MOON_ROTATION_X", int.Parse(values[16])},
+                { "MOON_VELOCITY_X", int.Parse(values[17])},
+                { "MOON_VELOCITY_Y", int.Parse(values[18])},
+                { "MOON_VELOCITY_Z", int.Parse(values[19])},
             };
-    data.Add(data_line);
+    data.Add(data_dict);
         }
 return data;
     }
