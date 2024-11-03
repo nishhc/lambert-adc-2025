@@ -1,12 +1,14 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CSV_Parser : MonoBehaviour
 {
-    List<Dictionary<string, int>> flightData = new List<Dictionary<string, int>>();
-    void Awake()
+    [SerializeField] private TextAsset csvFile;
+    private List<Dictionary<string, double>> flightData = new List<Dictionary<string, double>>();
+
+    private void Awake()
     {
+<<<<<<< HEAD
         flightData = GetDataFromCSV("csv_data.csv");
     }
 
@@ -43,7 +45,67 @@ public class CSV_Parser : MonoBehaviour
                 { "MOON_VELOCITY_Z", int.Parse(values[19])},
             };
     data.Add(data_dict);
+=======
+        if (csvFile != null)
+        {
+            flightData = GetDataFromCSV(csvFile);
+            PrintFlightData();
         }
-return data;
+        else
+        {
+            Debug.LogError("No CSV file assigned in the inspector.");
+        }
+    }
+
+    private List<Dictionary<string, double>> GetDataFromCSV(TextAsset csvData)
+    {
+        var dataLines = csvData.text.Split('\n');
+        if (dataLines.Length <= 1) return null;
+        var headers = dataLines[0].Split(',');
+        var data = new List<Dictionary<string, double>>();
+
+        for (int i = 1; i < dataLines.Length; i++)
+        {
+            var line = dataLines[i].Trim();
+            if (string.IsNullOrEmpty(line)) continue;
+
+            var values = line.Split(',');
+
+            var dataDict = new Dictionary<string, double>();
+            for (int j = 0; j < headers.Length && j < values.Length; j++)
+            {
+                if (double.TryParse(values[j], out double doubleValue))
+                {
+                    dataDict[headers[j]] = doubleValue;
+                }
+
+                /* A lot of these are empty, so this just floods the console with warnings. not exactly sure what to do with this.
+                most likely using machine learning later for data cleaning
+                that'll be done by proj supervisors, not reg members unless experience shown 
+                
+                else 
+                {
+                    Debug.LogWarning($"Unable to parse '{values[j]}' as double in row {i + 1}, column '{headers[j]}'.");
+                }
+                */
+            }
+
+            data.Add(dataDict);
+        }
+        return data;
+    }
+
+    private void PrintFlightData()
+    {
+        foreach (var row in flightData)
+        {
+            string rowString = "";
+            foreach (var kvp in row)
+            {
+                rowString += $"{kvp.Key}: {kvp.Value}, ";
+            }
+            Debug.Log(rowString);
+>>>>>>> 2376d63d8b65943c17bb221f70a648ba4807286e
+        }
     }
 }
