@@ -6,7 +6,7 @@ public class RocketTransformLerp : MonoBehaviour
 {
 
     private Vector3 targetPos;
-    [SerializeField] private int index = 0;
+    private int index = 0;
 
     private float velocityX;
     private float velocityY;
