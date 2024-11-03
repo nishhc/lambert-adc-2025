@@ -5,12 +5,12 @@ using UnityEngine;
 public class RocketTransformLerp : MonoBehaviour
 {
 
-    [SerializeField] private Vector3 targetPos;
+    private Vector3 targetPos;
     [SerializeField] private int index = 0;
 
-    [SerializeField] private float velocityX;
-    [SerializeField] private float velocityY;
-    [SerializeField] private float velocityZ;
+    private float velocityX;
+    private float velocityY;
+    private float velocityZ;
     [SerializeField] private float rotateSpeed;
     [SerializeField] private float pointUpdateDistanceThreshold;
 
