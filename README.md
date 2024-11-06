@@ -4,7 +4,7 @@ This is the Lambert STEM in Space's submission to the NASA App Development Chall
 
 ## Getting started
 
-Ensure you have the latest Unity LTS Version installed. We will be using it for the challenge. 
+Ensure you have the latest Unity 2022 LTS Version installed. We will be using it for the challenge. 
 
 Unity Download: https://unity.com/download
 
@@ -12,8 +12,9 @@ Then, ensure you have Git installed on your machine and run the following comman
 
 ```
 git clone https://gitlab.com/lambert-stem-in-space/lambert-adc-2025.git
-cd lambert-adc-2025
 ```
+
+Open Unity Hub and click "Add" and then "Add project from disk". Select the cloned folder and open in the latest Unity 2022 LTS Version.
 
 ## Roadmap
 
