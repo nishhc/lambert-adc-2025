@@ -8,7 +8,7 @@ public class CameraControl : MonoBehaviour
     [SerializeField] float sprintMultiplier;
     [SerializeField] float cameraSensitivity;
 
-    [SerializeField] private Camera camera;
+    [SerializeField] private Camera cam;
     private Vector3 anchorPoint;
     private Quaternion anchorRot;
 
@@ -48,7 +48,7 @@ public class CameraControl : MonoBehaviour
             {
                 move -= Vector3.up * speed;
             }
-                
+
             transform.Translate(move);
         }
 

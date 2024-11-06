@@ -1,17 +1,24 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Purchasing;
 
 public class CSV_Parser : MonoBehaviour
 {
     [SerializeField] private TextAsset csvFile;
     private List<Dictionary<string, double>> flightData = new List<Dictionary<string, double>>();
+    public static List<Vector3> Positions { get; } = new List<Vector3>();
+    public static List<Vector3> Velocities { get; } = new List<Vector3>();
+
 
     private void Awake()
     {
+        Positions.Clear();
+        Velocities.Clear();
+
         if (csvFile != null)
         {
             flightData = GetDataFromCSV(csvFile);
-            PrintFlightData();
+            DataList();
         }
         else
         {
@@ -67,6 +74,17 @@ public class CSV_Parser : MonoBehaviour
                 rowString += $"{kvp.Key}: {kvp.Value}, ";
             }
             Debug.Log(rowString);
+        }
+    }
+
+    private void DataList()
+    {
+        foreach (var row in flightData)
+        {
+            Vector3 position = new Vector3((float)row["Rx(km)[J2000-EARTH]"], (float)row["Ry(km)[J2000-EARTH]"], (float)row["Rz(km)[J2000-EARTH]"]);
+            Vector3 velocity = new Vector3((float)row["Vx(km/s)[J2000-EARTH]"], (float)row["Vy(km/s)[J2000-EARTH]"], (float)row["Vz(km/s)[J2000-EARTH]"]);
+            Positions.Add(position);
+            Velocities.Add(velocity);
         }
     }
 }

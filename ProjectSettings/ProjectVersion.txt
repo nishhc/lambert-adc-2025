@@ -1,7 +1,2 @@
-<<<<<<< HEAD
-m_EditorVersion: 2021.3.38f1
-m_EditorVersionWithRevision: 2021.3.38f1 (7a2fa5d8d101)
-=======
 m_EditorVersion: 2022.3.51f1
 m_EditorVersionWithRevision: 2022.3.51f1 (9f9d16c45e54)
->>>>>>> 2376d63d8b65943c17bb221f70a648ba4807286e
