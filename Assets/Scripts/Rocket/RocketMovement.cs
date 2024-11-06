@@ -36,7 +36,7 @@ public class RocketMovement : MonoBehaviour
 
     public void SetVelocity(Vector3 velocity)
     {
-        _velocity = velocity; // * 1000 as the datasheet uses km, not m
+        _velocity = velocity;
     }
 
     public void SetPosition(Vector3 position)
