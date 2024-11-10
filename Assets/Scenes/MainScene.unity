@@ -386,7 +386,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 933726225}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -428,7 +428,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 933726225}
-  m_Mesh: {fileID: -7401589277727621184, guid: 0cfa8afb52f937344bd35c03e50ee2c3, type: 3}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1136924006
 GameObject:
   m_ObjectHideFlags: 0
@@ -465,7 +465,6 @@ MonoBehaviour:
   _timeBetween: 1
   timeScale: 100
   _directTrack: 0
-  obj: {fileID: 0}
 --- !u!54 &1136924008
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -637,8 +636,8 @@ GameObject:
   - component: {fileID: 1486298539}
   - component: {fileID: 1486298538}
   - component: {fileID: 1486298537}
-  - component: {fileID: 1486298541}
   - component: {fileID: 1486298540}
+  - component: {fileID: 1486298541}
   m_Layer: 0
   m_Name: PosShip
   m_TagString: Untagged
@@ -662,7 +661,6 @@ MonoBehaviour:
   _timeBetween: 1
   timeScale: 100
   _directTrack: 1
-  obj: {fileID: 0}
 --- !u!54 &1486298538
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -739,7 +737,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 653a46cb9369a9848a669c4977f786b9, type: 2}
+  - {fileID: 2100000, guid: e582c78c5f4e7984ca522e7093fa660a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -785,7 +783,7 @@ LineRenderer:
       serializedVersion: 2
       key0: {r: 1, g: 1, b: 1, a: 1}
       key1: {r: 1, g: 1, b: 1, a: 1}
-      key2: {r: 0, g: 0, b: 0, a: 0}
+      key2: {r: 0, g: 0, b: 0, a: 1}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
       key5: {r: 0, g: 0, b: 0, a: 0}
@@ -800,17 +798,17 @@ LineRenderer:
       ctime6: 0
       ctime7: 0
       atime0: 0
-      atime1: 65535
-      atime2: 0
+      atime1: 26407
+      atime2: 65535
       atime3: 0
       atime4: 0
       atime5: 0
       atime6: 0
       atime7: 0
       m_Mode: 0
-      m_ColorSpace: -1
+      m_ColorSpace: 0
       m_NumColorKeys: 2
-      m_NumAlphaKeys: 2
+      m_NumAlphaKeys: 3
     numCornerVertices: 0
     numCapVertices: 0
     alignment: 0

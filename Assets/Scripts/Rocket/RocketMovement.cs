@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class RocketMovement : MonoBehaviour
 {
-    [SerializeField] [ReadOnlyField] private float timer;
+    [SerializeField][ReadOnlyField] private float timer;
     [SerializeField] private float _timeBetween = 1;
-    [Range(0.0f, 100f)] [SerializeField] private float timeScale = 1f;
+    [Range(0.0f, 100f)][SerializeField] private float timeScale = 1f;
     private int _i = 1;
     private Rigidbody _rb;
     private LineManager lineManager;
@@ -48,8 +48,8 @@ public class RocketMovement : MonoBehaviour
             _i++;
             if (!_directTrack)
             {
-                Debug.Log($"{new Vector3(_rb.velocity.x, _rb.velocity.z, _rb.velocity.y)} {CSV_Parser.Velocities[_i]}");
-                Debug.Log(Vector3.Distance(new Vector3(_rb.velocity.x, _rb.velocity.z, _rb.velocity.y), CSV_Parser.Velocities[_i]));
+                Debug.Log($"Actual Velocity: {new Vector3(_rb.velocity.x, _rb.velocity.y, _rb.velocity.z)} Point Velocity (from sheet): {CSV_Parser.Velocities[_i]}");
+                Debug.Log($"Distance between actual and expected (km): {Vector3.Distance(new Vector3(_rb.velocity.x, _rb.velocity.y, _rb.velocity.z), CSV_Parser.Velocities[_i])}");
                 SetTargetPosition(CSV_Parser.Positions[_i]);
                 SetTargetVelocity(CSV_Parser.Velocities[_i]);
             }
@@ -81,8 +81,12 @@ public class RocketMovement : MonoBehaviour
             _rb.velocity = Vector3.zero;
         }
 
-        Vector3 direction = positionError.normalized;
-        _rb.velocity = _targetVelocity;
+        Vector3 proportionalVelocity = positionError.normalized * Mathf.Min(positionError.magnitude, _targetVelocity.magnitude);
+        _rb.velocity = proportionalVelocity;
+
+        float dampingFactor = Mathf.Clamp01(positionError.magnitude / 10f);
+        _rb.velocity = proportionalVelocity * dampingFactor;
+
         if (lineManager != null)
         {
             lineManager.DrawDynamicLine(transform.position);
