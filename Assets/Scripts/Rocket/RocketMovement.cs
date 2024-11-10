@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class RocketMovement : MonoBehaviour
 {
-    [SerializeField][ReadOnlyField] private float timer;
+    [SerializeField] [ReadOnlyField] private float timer;
     [SerializeField] private float _timeBetween = 1;
-    [Range(0.0f, 100f)][SerializeField] private float timeScale = 1f;
+    [Range(0.0f, 100f)] [SerializeField] private float timeScale = 1f;
     private int _i = 1;
     private Rigidbody _rb;
+    private LineManager lineManager;
 
     // Target position and velocity
     private Vector3 _targetPosition;
@@ -22,6 +23,7 @@ public class RocketMovement : MonoBehaviour
         _rb.mass = 60129.7f; // Set the mass (if necessary)
         _timeBetween = 0;
         _rb.position = CSV_Parser.Positions[_i];
+        lineManager = GetComponent<LineManager>();
 
         if (!_directTrack)
         {
@@ -46,8 +48,8 @@ public class RocketMovement : MonoBehaviour
             _i++;
             if (!_directTrack)
             {
-                Debug.Log($"{new Vector3(_rb.velocity.x, _rb.velocity.y, _rb.velocity.z)} {CSV_Parser.Velocities[_i]}");
-                Debug.Log(Vector3.Distance(new Vector3(_rb.velocity.x, _rb.velocity.y, _rb.velocity.z), CSV_Parser.Velocities[_i]));
+                Debug.Log($"{new Vector3(_rb.velocity.x, _rb.velocity.z, _rb.velocity.y)} {CSV_Parser.Velocities[_i]}");
+                Debug.Log(Vector3.Distance(new Vector3(_rb.velocity.x, _rb.velocity.z, _rb.velocity.y), CSV_Parser.Velocities[_i]));
                 SetTargetPosition(CSV_Parser.Positions[_i]);
                 SetTargetVelocity(CSV_Parser.Velocities[_i]);
             }
@@ -81,5 +83,10 @@ public class RocketMovement : MonoBehaviour
 
         Vector3 direction = positionError.normalized;
         _rb.velocity = _targetVelocity;
+        if (lineManager != null)
+        {
+            lineManager.DrawDynamicLine(transform.position);
+        }
+
     }
 }
