@@ -15,7 +15,6 @@ public class RocketMovement : MonoBehaviour
     private Vector3 _targetVelocity;
 
     [SerializeField] private bool _directTrack = false;
-    [SerializeField] private GameObject obj;
 
     void Start()
     {
@@ -47,8 +46,8 @@ public class RocketMovement : MonoBehaviour
             _i++;
             if (!_directTrack)
             {
-                Debug.Log($"{new Vector3(_rb.velocity.x, _rb.velocity.z, _rb.velocity.y)} {CSV_Parser.Velocities[_i]}");
-                Debug.Log(Vector3.Distance(new Vector3(_rb.velocity.x, _rb.velocity.z, _rb.velocity.y), CSV_Parser.Velocities[_i]));
+                Debug.Log($"{new Vector3(_rb.velocity.x, _rb.velocity.y, _rb.velocity.z)} {CSV_Parser.Velocities[_i]}");
+                Debug.Log(Vector3.Distance(new Vector3(_rb.velocity.x, _rb.velocity.y, _rb.velocity.z), CSV_Parser.Velocities[_i]));
                 SetTargetPosition(CSV_Parser.Positions[_i]);
                 SetTargetVelocity(CSV_Parser.Velocities[_i]);
             }
@@ -58,7 +57,6 @@ public class RocketMovement : MonoBehaviour
                 _rb.position = CSV_Parser.Positions[_i];
             }
         }
-        Instantiate(obj, transform.position, transform.rotation);
         MoveToTarget();
     }
 
