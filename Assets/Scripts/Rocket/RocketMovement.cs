@@ -1,96 +1,65 @@
-using System;
-using UnityEditor.Callbacks;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class RocketMovement : MonoBehaviour
 {
-    [SerializeField][ReadOnlyField] private float timer;
-    [SerializeField] private float _timeBetween = 1;
-    [Range(0.0f, 100f)][SerializeField] private float timeScale = 1f;
-    private int _i = 1;
+    [SerializeField] private float speed = 1f;
+    [SerializeField] private float acceleration = 5f; // Controls how fast the rocket accelerates
+    private int currentSegment = 0;
+    private float interpolationParameter = 0f;
     private Rigidbody _rb;
     private LineManager lineManager;
 
-    // Target position and velocity
-    private Vector3 _targetPosition;
-    private Vector3 _targetVelocity;
-
-    [SerializeField] private bool _directTrack = false;
+    private List<Vector3> pathPositions;
+    private List<Vector3> pathVelocities;
 
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
         _rb.mass = 60129.7f; // Set the mass (if necessary)
-        _timeBetween = 0;
-        _rb.position = CSV_Parser.Positions[_i];
+
+        pathPositions = CSV_Parser.Positions;
+        pathVelocities = CSV_Parser.Velocities;
         lineManager = GetComponent<LineManager>();
-
-        if (!_directTrack)
-        {
-            SetTargetPosition(CSV_Parser.Positions[_i]);
-            SetTargetVelocity(CSV_Parser.Velocities[_i]);
-        }
-
+        _rb.position = pathPositions[1];
     }
 
     void Update()
     {
-        Time.timeScale = timeScale;
-
-        timer += Time.deltaTime;
-        _timeBetween -= Time.deltaTime / timeScale;
-
-        if (_timeBetween <= 0)
+        if (currentSegment < pathPositions.Count - 3)
         {
-            float _curTimeBtw = _timeBetween;
-            _timeBetween = 60f / timeScale + _curTimeBtw;
+            Vector3 targetPosition = GetCatmullRomPosition(interpolationParameter, pathPositions[currentSegment], pathPositions[currentSegment + 1], pathPositions[currentSegment + 2], pathPositions[currentSegment + 3]);
+            Vector3 direction = (targetPosition - _rb.position).normalized;
 
-            _i++;
-            if (!_directTrack)
+            Vector3 targetVelocity = direction * speed;
+
+            _rb.velocity = Vector3.Lerp(_rb.velocity, targetVelocity, Time.deltaTime * acceleration);
+
+            interpolationParameter += Time.deltaTime * (speed / (targetPosition - _rb.position).magnitude);
+
+            if (interpolationParameter >= 1f)
             {
-                Debug.Log($"Actual Velocity: {new Vector3(_rb.velocity.x, _rb.velocity.y, _rb.velocity.z)} Point Velocity (from sheet): {CSV_Parser.Velocities[_i]}");
-                Debug.Log($"Distance between actual and expected (km): {Vector3.Distance(new Vector3(_rb.velocity.x, _rb.velocity.y, _rb.velocity.z), CSV_Parser.Velocities[_i])}");
-                SetTargetPosition(CSV_Parser.Positions[_i]);
-                SetTargetVelocity(CSV_Parser.Velocities[_i]);
-            }
-            else
-            {
-                _rb.velocity = Vector3.zero;
-                _rb.position = CSV_Parser.Positions[_i];
+                interpolationParameter = 0f;
+                currentSegment++;
             }
         }
-        MoveToTarget();
-    }
-
-    private void SetTargetPosition(Vector3 position)
-    {
-        _targetPosition = position;
-    }
-
-    private void SetTargetVelocity(Vector3 velocity)
-    {
-        _targetVelocity = velocity;
-    }
-
-    private void MoveToTarget()
-    {
-        Vector3 positionError = _targetPosition - _rb.position;
-
-        if (positionError.magnitude < 0.01f)
-        {
-            _rb.velocity = Vector3.zero;
-        }
-
-        Vector3 proportionalVelocity = positionError.normalized * Mathf.Min(positionError.magnitude, _targetVelocity.magnitude);
-        _rb.velocity = proportionalVelocity;
-
-        float dampingFactor = Mathf.Clamp01(positionError.magnitude / 10f);
-        _rb.velocity = proportionalVelocity * dampingFactor;
 
         if (lineManager != null)
         {
-            lineManager.DrawDynamicLine(transform.position);
+            lineManager.DrawDynamicLine(_rb.position);
         }
+    }
 
+    private Vector3 GetCatmullRomPosition(float parameter, Vector3 point0, Vector3 point1, Vector3 point2, Vector3 point3)
+    {
+        float parameterSquared = parameter * parameter;
+        float parameterCubed = parameterSquared * parameter;
+
+        return 0.5f * (
+            (2 * point1) +
+            (-point0 + point2) * parameter +
+            (2 * point0 - 5 * point1 + 4 * point2 - point3) * parameterSquared +
+            (-point0 + 3 * point1 - 3 * point2 + point3) * parameterCubed
+        );
     }
 }

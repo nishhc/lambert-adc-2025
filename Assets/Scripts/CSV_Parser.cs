@@ -82,8 +82,10 @@ public class CSV_Parser : MonoBehaviour
     private void DataList()
     {
         foreach (var row in flightData)
+
+        //TODO: use headers list when back
         {
-            float time = (float)row["MISSION ELAPSED TIME (mins)"];
+            float time = (float)row["MISSION ELAPSED TIME (min)"];
             Vector3 position = new Vector3((float)row["Rx(km)[J2000-EARTH]"], (float)row["Rz(km)[J2000-EARTH]"], (float)row["Ry(km)[J2000-EARTH]"]);
             Vector3 velocity = new Vector3((float)row["Vx(km/s)[J2000-EARTH]"], (float)row["Vz(km/s)[J2000-EARTH]"], (float)row["Vy(km/s)[J2000-EARTH]"]);
             Positions.Add(position);
