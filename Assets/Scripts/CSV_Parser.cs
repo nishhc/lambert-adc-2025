@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.Purchasing;
 
 public class CSV_Parser : MonoBehaviour
 {
@@ -10,16 +10,21 @@ public class CSV_Parser : MonoBehaviour
     public static List<Vector3> Positions { get; } = new List<Vector3>();
     public static List<Vector3> Velocities { get; } = new List<Vector3>();
     public static List<float> Times { get; } = new List<float>();
-
+    private static string[] headers;
+    [SerializeField] private GameObject _pointer;
+    [SerializeField] private bool _showPoints = false;
+    [SerializeField] private float _initialScale = 0.1f;
 
     private void Awake()
     {
         Positions.Clear();
         Velocities.Clear();
+        Times.Clear();
 
         if (csvFile != null)
         {
             flightData = GetDataFromCSV(csvFile);
+            PrintFlightData();
             DataList();
         }
         else
@@ -32,7 +37,8 @@ public class CSV_Parser : MonoBehaviour
     {
         var dataLines = csvData.text.Split('\n');
         if (dataLines.Length <= 1) return null;
-        var headers = dataLines[0].Split(',');
+
+        headers = dataLines[0].Split(',').Select(h => h.Trim()).ToArray();
         var data = new List<Dictionary<string, double>>();
 
         for (int i = 1; i < dataLines.Length; i++)
@@ -41,13 +47,14 @@ public class CSV_Parser : MonoBehaviour
             if (string.IsNullOrEmpty(line)) continue;
 
             var values = line.Split(',');
-
             var dataDict = new Dictionary<string, double>();
+
             for (int j = 0; j < headers.Length && j < values.Length; j++)
             {
+                var header = headers[j].Trim();
                 if (double.TryParse(values[j], out double doubleValue))
                 {
-                    dataDict[headers[j]] = doubleValue;
+                    dataDict[header] = doubleValue;
                 }
 
                 /* A lot of these are empty, so this just floods the console with warnings. not exactly sure what to do with this.
@@ -63,6 +70,7 @@ public class CSV_Parser : MonoBehaviour
 
             data.Add(dataDict);
         }
+
         return data;
     }
 
@@ -70,11 +78,7 @@ public class CSV_Parser : MonoBehaviour
     {
         foreach (var row in flightData)
         {
-            string rowString = "";
-            foreach (var kvp in row)
-            {
-                rowString += $"{kvp.Key}: {kvp.Value}, ";
-            }
+            string rowString = string.Join(", ", row.Select(kvp => $"{kvp.Key}: {kvp.Value}"));
             Debug.Log(rowString);
         }
     }
@@ -82,15 +86,23 @@ public class CSV_Parser : MonoBehaviour
     private void DataList()
     {
         foreach (var row in flightData)
-
-        //TODO: use headers list when back
         {
-            float time = (float)row["MISSION ELAPSED TIME (min)"];
-            Vector3 position = new Vector3((float)row["Rx(km)[J2000-EARTH]"], (float)row["Rz(km)[J2000-EARTH]"], (float)row["Ry(km)[J2000-EARTH]"]);
-            Vector3 velocity = new Vector3((float)row["Vx(km/s)[J2000-EARTH]"], (float)row["Vz(km/s)[J2000-EARTH]"], (float)row["Vy(km/s)[J2000-EARTH]"]);
-            Positions.Add(position);
-            Velocities.Add(velocity);
-            Times.Add(time);
+            if (row.ContainsKey(headers[0]) &&
+                row.ContainsKey("Rx(km)[J2000-EARTH]") &&
+                row.ContainsKey("Rz(km)[J2000-EARTH]") &&
+                row.ContainsKey("Ry(km)[J2000-EARTH]") &&
+                row.ContainsKey("Vx(km/s)[J2000-EARTH]") &&
+                row.ContainsKey("Vz(km/s)[J2000-EARTH]") &&
+                row.ContainsKey("Vy(km/s)[J2000-EARTH]"))
+            {
+                float time = (float)row[headers[0]];
+                Vector3 position = _initialScale * new Vector3((float)row["Rx(km)[J2000-EARTH]"], (float)row["Rz(km)[J2000-EARTH]"], (float)row["Ry(km)[J2000-EARTH]"]);
+                Vector3 velocity = _initialScale * new Vector3((float)row["Vx(km/s)[J2000-EARTH]"], (float)row["Vz(km/s)[J2000-EARTH]"], (float)row["Vy(km/s)[J2000-EARTH]"]);
+                Positions.Add(position);
+                if (_showPoints) Instantiate(_pointer, position, transform.rotation);
+                Velocities.Add(velocity);
+                Times.Add(time);
+            }
         }
     }
 }

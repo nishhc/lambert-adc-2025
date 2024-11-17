@@ -153,7 +153,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 309870292}
-  m_Father: {fileID: 1136924009}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &218048754
 MonoBehaviour:
@@ -363,7 +363,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -192684.16, y: -13306.862, z: -66645.06}
-  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_LocalScale: {x: 10, y: 10, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -396,7 +396,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 10, y: 10, z: 10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1136924009}
@@ -483,9 +483,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf0a4b005d0904845b486adc38c8bd23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timer: 0
-  timeScale: 100
-  speed: 0.01
+  timeMultiplier: 1
+  simulationTime: 0
+  missionElapsedTime: 0
 --- !u!54 &1136924008
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -527,7 +527,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 685812900}
-  - {fileID: 218048753}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!120 &1136924010
@@ -784,12 +783,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75f59a97e0c364a31a51d7ade840f016, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  csvFile: {fileID: 4900000, guid: 795a5a42c67f9f54a800165db6468439, type: 3}
+  csvFile: {fileID: 4900000, guid: 54c5387a4146eaa4d85d716f14b6c6c5, type: 3}
+  _pointer: {fileID: 464083195}
+  _showPoints: 1
+  _initialScale: 0.1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1790626433}
   - {fileID: 1864654193}
+  - {fileID: 218048753}
   - {fileID: 1136924009}
   - {fileID: 464083199}
