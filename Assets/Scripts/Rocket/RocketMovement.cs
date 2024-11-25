@@ -1,22 +1,18 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Purchasing;
 
 public class RocketMovement : MonoBehaviour
 {
+    [SerializeField] private float simulationTime = 0f;
     [SerializeField] private float timeMultiplier = 1f;
+    [SerializeField] private float timeStep = 1f;
     private Rigidbody _rb;
-
     private List<Vector3> pathPositions;
     private List<Vector3> pathVelocities;
     private List<float> pathTimes;
 
-    private int currentSegment = 0;
-    private float segmentStartTime;
-    private float segmentEndTime;
+    private bool isPaused = false;
 
-    [SerializeField][ReadOnlyField] public float simulationTime = 0f;
-    [SerializeField][ReadOnlyField] public float elapsed = 0f;
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
@@ -32,40 +28,77 @@ public class RocketMovement : MonoBehaviour
         }
 
         _rb.position = pathPositions[0];
-        simulationTime = 0f;
+        UpdateStateAtTime(simulationTime);
+    }
 
-        segmentStartTime = pathTimes[0];
-        segmentEndTime = pathTimes[1];
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            isPaused = !isPaused;
+        }
+
+        if (isPaused)
+        {
+            if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                StepForward();
+            }
+            else if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                StepBackward();
+            }
+        }
     }
 
     void FixedUpdate()
     {
-        float deltaTime = Time.fixedDeltaTime * timeMultiplier;
-        simulationTime += deltaTime;
-        elapsed = simulationTime / 60;
-
-        while (simulationTime > segmentEndTime && currentSegment < pathTimes.Count - 2)
+        if (!isPaused)
         {
-            currentSegment++;
-            segmentStartTime = pathTimes[currentSegment];
-            segmentEndTime = pathTimes[currentSegment + 1];
+            simulationTime += Time.fixedDeltaTime * timeMultiplier;
         }
+        UpdateStateAtTime(simulationTime);
 
-        if (currentSegment >= pathTimes.Count - 1)
-        {
-            simulationTime = segmentEndTime;
-        }
+    }
+
+    void UpdateStateAtTime(float time)
+    {
+        simulationTime = Mathf.Clamp(time, pathTimes[0], pathTimes[pathTimes.Count - 1]);
+
+        int segmentIndex = FindSegment(simulationTime);
+        float segmentStartTime = pathTimes[segmentIndex];
+        float segmentEndTime = pathTimes[segmentIndex + 1];
 
         float segmentDuration = segmentEndTime - segmentStartTime;
-        float segmentProgress = Mathf.Clamp01((simulationTime - segmentStartTime) / segmentDuration);
+        float segmentProgress = (simulationTime - segmentStartTime) / segmentDuration;
 
-        Vector3 interpolatedPosition = Vector3.Lerp(pathPositions[currentSegment], pathPositions[currentSegment + 1], segmentProgress);
-        Vector3 interpolatedVelocity = Vector3.Lerp(pathVelocities[currentSegment], pathVelocities[currentSegment + 1], segmentProgress);
+        Vector3 interpolatedPosition = Vector3.Lerp(pathPositions[segmentIndex], pathPositions[segmentIndex + 1], segmentProgress);
+        Vector3 interpolatedVelocity = Vector3.Lerp(pathVelocities[segmentIndex], pathVelocities[segmentIndex + 1], segmentProgress);
 
         _rb.MovePosition(interpolatedPosition);
         _rb.velocity = interpolatedVelocity;
+    }
 
-        Debug.Log($"Time Multiplier: {timeMultiplier}, Simulation Time: {simulationTime}, Segment: {currentSegment}, Position: {_rb.position}, Velocity: {_rb.velocity}");
+    int FindSegment(float time)
+    {
+        for (int i = 0; i < pathTimes.Count - 1; i++)
+        {
+            if (time >= pathTimes[i] && time <= pathTimes[i + 1])
+            {
+                return i;
+            }
+        }
+        return pathTimes.Count - 2;
+    }
+
+    public void StepForward()
+    {
+        UpdateStateAtTime(simulationTime + timeStep);
+    }
+
+    public void StepBackward()
+    {
+        UpdateStateAtTime(simulationTime - timeStep);
     }
 
     void OnDrawGizmos()
