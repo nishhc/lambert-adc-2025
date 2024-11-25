@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Purchasing;
 
 public class RocketMovement : MonoBehaviour
 {
@@ -14,8 +15,8 @@ public class RocketMovement : MonoBehaviour
     private float segmentStartTime;
     private float segmentEndTime;
 
-    private float simulationTime = 0f;
-
+    [SerializeField][ReadOnlyField] public float simulationTime = 0f;
+    [SerializeField][ReadOnlyField] public float elapsed = 0f;
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
@@ -41,6 +42,7 @@ public class RocketMovement : MonoBehaviour
     {
         float deltaTime = Time.fixedDeltaTime * timeMultiplier;
         simulationTime += deltaTime;
+        elapsed = simulationTime / 60;
 
         while (simulationTime > segmentEndTime && currentSegment < pathTimes.Count - 2)
         {
