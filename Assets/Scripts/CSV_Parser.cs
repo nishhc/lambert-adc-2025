@@ -13,7 +13,7 @@ public class CSV_Parser : MonoBehaviour
     private static string[] headers;
     [SerializeField] private GameObject _pointer;
     [SerializeField] private bool _showPoints = false;
-    [SerializeField] private float _initialScale = 0.1f;
+    [SerializeField] private float _initialScale = 1f;
 
     private void Awake()
     {

@@ -4,105 +4,66 @@ using UnityEngine;
 public class RocketMovement : MonoBehaviour
 {
     [SerializeField] private float timeMultiplier = 1f;
-    private float maxTimeMultiplier;
-    private int currentSegment = 0;
     private Rigidbody _rb;
 
     private List<Vector3> pathPositions;
+    private List<Vector3> pathVelocities;
     private List<float> pathTimes;
 
-    [SerializeField][ReadOnlyField] private float simulationTime = 0f;
-    [SerializeField][ReadOnlyField] private float missionElapsedTime = 0f;
+    private int currentSegment = 0;
+    private float segmentStartTime;
+    private float segmentEndTime;
 
-    public void Start()
+    private float simulationTime = 0f;
+
+    void Start()
     {
         _rb = GetComponent<Rigidbody>();
         _rb.mass = 60129.7f;
 
         pathPositions = CSV_Parser.Positions;
+        pathVelocities = CSV_Parser.Velocities;
         pathTimes = CSV_Parser.Times;
 
-        float smallestSegmentDuration = float.MaxValue;
-        for (int i = 0; i < pathTimes.Count - 1; i++)
+        for (int i = 0; i < pathTimes.Count; i++)
         {
-            float segmentDuration = pathTimes[i + 1] - pathTimes[i];
-            if (segmentDuration < smallestSegmentDuration)
-            {
-                smallestSegmentDuration = segmentDuration;
-            }
+            pathTimes[i] *= 60f;
         }
 
-        maxTimeMultiplier = smallestSegmentDuration * 3600f * 0.9f;
+        _rb.position = pathPositions[0];
+        simulationTime = 0f;
 
-        timeMultiplier = Mathf.Clamp(timeMultiplier, 0f, maxTimeMultiplier);
-
-        if (pathPositions.Count > 0)
-        {
-            _rb.position = pathPositions[0];
-        }
-        else
-        {
-            Debug.LogError("No positions loaded from CSV!");
-        }
+        segmentStartTime = pathTimes[0];
+        segmentEndTime = pathTimes[1];
     }
 
-    public void OnValidate()
+    void FixedUpdate()
     {
-        if (pathTimes != null && pathTimes.Count > 1)
+        float deltaTime = Time.fixedDeltaTime * timeMultiplier;
+        simulationTime += deltaTime;
+
+        while (simulationTime > segmentEndTime && currentSegment < pathTimes.Count - 2)
         {
-            float smallestSegmentDuration = float.MaxValue;
-            for (int i = 0; i < pathTimes.Count - 1; i++)
-            {
-                float segmentDuration = pathTimes[i + 1] - pathTimes[i];
-                if (segmentDuration < smallestSegmentDuration)
-                {
-                    smallestSegmentDuration = segmentDuration;
-                }
-            }
-            maxTimeMultiplier = (smallestSegmentDuration * 3600f) * 0.9f;
+            currentSegment++;
+            segmentStartTime = pathTimes[currentSegment];
+            segmentEndTime = pathTimes[currentSegment + 1];
         }
 
-        timeMultiplier = Mathf.Clamp(timeMultiplier, 0f, maxTimeMultiplier);
-    }
-
-    public void FixedUpdate()
-    {
-        timeMultiplier = Mathf.Clamp(timeMultiplier, 0f, maxTimeMultiplier);
-
-        simulationTime += Time.deltaTime * timeMultiplier;
-        missionElapsedTime = simulationTime / 60f;
-
-        if (currentSegment < pathPositions.Count - 1)
+        if (currentSegment >= pathTimes.Count - 1)
         {
-            if (missionElapsedTime >= pathTimes[currentSegment + 1])
-            {
-                currentSegment++;
-                if (currentSegment < pathPositions.Count - 1)
-                {
-                    _rb.position = pathPositions[currentSegment];
-                }
-            }
-            else
-            {
-                float segmentStartTime = pathTimes[currentSegment];
-                float segmentEndTime = pathTimes[currentSegment + 1];
-                float segmentDuration = segmentEndTime - segmentStartTime;
-
-                float segmentProgress = Mathf.Clamp01((missionElapsedTime - segmentStartTime) / segmentDuration);
-
-                Vector3 interpolatedPosition = Vector3.Lerp(
-                    pathPositions[currentSegment],
-                    pathPositions[currentSegment + 1],
-                    segmentProgress
-                );
-
-                _rb.MovePosition(interpolatedPosition);
-            }
+            simulationTime = segmentEndTime;
         }
-        else
-        {
-            _rb.velocity = Vector3.zero;
-        }
+
+        float segmentDuration = segmentEndTime - segmentStartTime;
+        float segmentProgress = Mathf.Clamp01((simulationTime - segmentStartTime) / segmentDuration);
+
+        Vector3 interpolatedPosition = Vector3.Lerp(pathPositions[currentSegment], pathPositions[currentSegment + 1], segmentProgress);
+        Vector3 interpolatedVelocity = Vector3.Lerp(pathVelocities[currentSegment], pathVelocities[currentSegment + 1], segmentProgress);
+
+        _rb.MovePosition(interpolatedPosition);
+        _rb.velocity = interpolatedVelocity;
+
+        Debug.Log($"Time Multiplier: {timeMultiplier}, Simulation Time: {simulationTime}, Segment: {currentSegment}, Position: {_rb.position}, Velocity: {_rb.velocity}");
     }
 
     void OnDrawGizmos()
