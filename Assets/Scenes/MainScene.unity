@@ -1398,7 +1398,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   simulationTime: 0
-  timeMultiplier: 1
+  timeMultiplier: 10
   timeStep: 1
 --- !u!1 &2117680520
 GameObject:

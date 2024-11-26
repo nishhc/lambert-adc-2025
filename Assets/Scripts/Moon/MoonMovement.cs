@@ -14,12 +14,10 @@ public class MoonMovement : MonoBehaviour
     void Awake()
     {
         manager = GameObject.FindGameObjectWithTag("AppManager").GetComponent<AppManager>();
-        AppManager.timeUtilObjs++;
     }
 
     void Start()
     {
-        Debug.Log(AppManager.timeUtilObjs);
         _rb = GetComponent<Rigidbody>();
 
         pathPositions = CSV_Parser.MoonPositions;
@@ -27,7 +25,7 @@ public class MoonMovement : MonoBehaviour
 
         for (int i = 0; i < pathTimes.Count; i++)
         {
-            pathTimes[i] *= Mathf.Pow(60, (float)1 / AppManager.timeUtilObjs);
+            pathTimes[i] *= Mathf.Pow(60, (float)1 / 2);  // manually edit this
         }
 
         _rb.position = pathPositions[0];

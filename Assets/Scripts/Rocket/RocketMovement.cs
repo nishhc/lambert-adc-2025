@@ -17,7 +17,6 @@ public class RocketMovement : MonoBehaviour
     void Awake()
     {
         manager = GameObject.FindGameObjectWithTag("AppManager").GetComponent<AppManager>();
-        AppManager.timeUtilObjs++;
     }
 
     void Start()
@@ -31,7 +30,7 @@ public class RocketMovement : MonoBehaviour
 
         for (int i = 0; i < pathTimes.Count; i++)
         {
-            pathTimes[i] *= Mathf.Pow(60, (float)1 / AppManager.timeUtilObjs);
+            pathTimes[i] *= Mathf.Pow(60, (float)1 / 2); // manually edit this
         }
 
         _rb.position = pathPositions[0];
