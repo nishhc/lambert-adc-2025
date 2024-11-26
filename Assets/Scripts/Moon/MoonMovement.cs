@@ -19,6 +19,7 @@ public class MoonMovement : MonoBehaviour
 
     void Start()
     {
+        Debug.Log(AppManager.timeUtilObjs);
         _rb = GetComponent<Rigidbody>();
 
         pathPositions = CSV_Parser.MoonPositions;
@@ -26,7 +27,7 @@ public class MoonMovement : MonoBehaviour
 
         for (int i = 0; i < pathTimes.Count; i++)
         {
-            pathTimes[i] *= Mathf.Pow(60, 1 / AppManager.timeUtilObjs);
+            pathTimes[i] *= Mathf.Pow(60, (float)1 / AppManager.timeUtilObjs);
         }
 
         _rb.position = pathPositions[0];
@@ -75,7 +76,7 @@ public class MoonMovement : MonoBehaviour
         Gizmos.color = Color.blue;
         if (pathPositions != null && pathPositions.Count > 1)
         {
-            for (int i = 0; i < pathPositions.Count - 2; i++)
+            for (int i = 0; i < pathPositions.Count - 1; i++)
             {
                 Gizmos.DrawLine(pathPositions[i], pathPositions[i + 1]);
             }

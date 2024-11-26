@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -18,7 +19,9 @@ public class CSV_Parser : MonoBehaviour
     public static List<float> Times { get; } = new List<float>();
     public static List<Vector3> MoonPositions { get; } = new List<Vector3>();
     private static string[] headers;
-    [SerializeField] private GameObject _pointer;
+    [SerializeField] private GameObject _artemisPointer;
+    [SerializeField] private GameObject _moonPointer;
+
     [SerializeField] private bool _showPoints = false;
     [SerializeField] private float _initialScale = 0.1f;
 
@@ -108,7 +111,7 @@ public class CSV_Parser : MonoBehaviour
                 Vector3 position = _initialScale * new Vector3((float)row["Rx(km)[J2000-EARTH]"], (float)row["Rz(km)[J2000-EARTH]"], (float)row["Ry(km)[J2000-EARTH]"]);
                 Vector3 velocity = _initialScale * new Vector3((float)row["Vx(km/s)[J2000-EARTH]"], (float)row["Vz(km/s)[J2000-EARTH]"], (float)row["Vy(km/s)[J2000-EARTH]"]);
                 Positions.Add(position);
-                if (_showPoints) Instantiate(_pointer, position, transform.rotation);
+                if (_showPoints) Instantiate(_artemisPointer, position, transform.rotation);
                 Velocities.Add(velocity);
                 Times.Add(time);
             }
@@ -122,6 +125,8 @@ public class CSV_Parser : MonoBehaviour
                 row.ContainsKey("MOON Rz(km)[J2000-EARTH]"))
             {
                 Vector3 position = _initialScale * new Vector3((float)row["MOON Rx(km)[J2000-EARTH]"], (float)row["MOON Rz(km)[J2000-EARTH]"], (float)row["MOON Ry(km)[J2000-EARTH]"]);
+                if (_showPoints) Instantiate(_moonPointer, position, transform.rotation);
+
                 MoonPositions.Add(position);
             }
         }
