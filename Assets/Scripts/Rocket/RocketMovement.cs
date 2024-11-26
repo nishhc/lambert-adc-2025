@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class RocketMovement : MonoBehaviour
 {
+    [Range(0.0f, 778990.1988f)]
     [SerializeField] private float simulationTime = 0f;
     [SerializeField] private float timeMultiplier = 1f;
     [SerializeField] private float timeStep = 1f;
@@ -10,6 +11,7 @@ public class RocketMovement : MonoBehaviour
     private List<Vector3> pathPositions;
     private List<Vector3> pathVelocities;
     private List<float> pathTimes;
+    [SerializeField] private Transform _mesh;
 
     private bool isPaused = false;
 
@@ -85,6 +87,8 @@ public class RocketMovement : MonoBehaviour
         {
             if (time >= pathTimes[i] && time <= pathTimes[i + 1])
             {
+                //_mesh.transform.rotation = Quaternion.Euler(Vector3.RotateTowards(_mesh.transform.rotation.eulerAngles, pathPositions[i + 1], 1000000, 1000000000));
+
                 return i;
             }
         }
