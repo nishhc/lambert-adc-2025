@@ -9,6 +9,7 @@ public class MoonMovement : MonoBehaviour
     private List<float> pathTimes;
     private AppManager manager;
     [SerializeField] private Transform _mesh;
+    private float moonSimTime;
 
 
     void Start()
@@ -21,30 +22,30 @@ public class MoonMovement : MonoBehaviour
 
         for (int i = 0; i < pathTimes.Count; i++)
         {
-            pathTimes[i] *= 60f;
+            pathTimes[i] *= Mathf.Pow(60, 1 / 2); // replace 2 with number of time utilizing objects, idk why we do this i need to review code
         }
 
         _rb.position = pathPositions[0];
-        UpdateStateAtTime(manager.simulationTime);
+        UpdateStateAtTime(moonSimTime);
     }
 
     void FixedUpdate()
     {
-
-        UpdateStateAtTime(manager.simulationTime);
+        moonSimTime = manager.simulationTime;
+        UpdateStateAtTime(moonSimTime);
 
     }
 
     void UpdateStateAtTime(float time)
     {
-        manager.simulationTime = Mathf.Clamp(time, pathTimes[0], pathTimes[pathTimes.Count - 1]);
+        moonSimTime = Mathf.Clamp(time, pathTimes[0], pathTimes[pathTimes.Count - 1]);
 
-        int segmentIndex = FindSegment(manager.simulationTime);
+        int segmentIndex = FindSegment(moonSimTime);
         float segmentStartTime = pathTimes[segmentIndex];
         float segmentEndTime = pathTimes[segmentIndex + 1];
 
         float segmentDuration = segmentEndTime - segmentStartTime;
-        float segmentProgress = (manager.simulationTime - segmentStartTime) / segmentDuration;
+        float segmentProgress = (moonSimTime - segmentStartTime) / segmentDuration;
 
         Vector3 interpolatedPosition = Vector3.Lerp(pathPositions[segmentIndex], pathPositions[segmentIndex + 1], segmentProgress);
 

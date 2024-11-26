@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ public class RocketMovement : MonoBehaviour
     private List<float> pathTimes;
     private AppManager manager;
     [SerializeField] private Transform _mesh;
+    private float rocketSimTime;
 
 
     void Start()
@@ -24,30 +26,30 @@ public class RocketMovement : MonoBehaviour
 
         for (int i = 0; i < pathTimes.Count; i++)
         {
-            pathTimes[i] *= 60f;
+            pathTimes[i] *= Mathf.Pow(60, (float)1 / 2); // replace 2 with number of time utilizing objects, idk why we do this i need to review code
         }
 
         _rb.position = pathPositions[0];
-        UpdateStateAtTime(manager.simulationTime);
+        UpdateStateAtTime(rocketSimTime);
     }
 
     void FixedUpdate()
     {
-
-        UpdateStateAtTime(manager.simulationTime);
+        rocketSimTime = manager.simulationTime;
+        UpdateStateAtTime(rocketSimTime);
 
     }
 
     void UpdateStateAtTime(float time)
     {
-        manager.simulationTime = Mathf.Clamp(time, pathTimes[0], pathTimes[pathTimes.Count - 1]);
+        rocketSimTime = Mathf.Clamp(time, pathTimes[0], pathTimes[pathTimes.Count - 1]);
 
-        int segmentIndex = FindSegment(manager.simulationTime);
+        int segmentIndex = FindSegment(rocketSimTime);
         float segmentStartTime = pathTimes[segmentIndex];
         float segmentEndTime = pathTimes[segmentIndex + 1];
 
         float segmentDuration = segmentEndTime - segmentStartTime;
-        float segmentProgress = (manager.simulationTime - segmentStartTime) / segmentDuration;
+        float segmentProgress = (rocketSimTime - segmentStartTime) / segmentDuration;
 
         Vector3 interpolatedPosition = Vector3.Lerp(pathPositions[segmentIndex], pathPositions[segmentIndex + 1], segmentProgress);
         Vector3 interpolatedVelocity = Vector3.Lerp(pathVelocities[segmentIndex], pathVelocities[segmentIndex + 1], segmentProgress);
