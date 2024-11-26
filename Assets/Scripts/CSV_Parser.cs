@@ -1,19 +1,26 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 public class CSV_Parser : MonoBehaviour
 {
     [SerializeField] private TextAsset csvFile;
+    [SerializeField] private TextAsset bonusFile;
+
     private List<Dictionary<string, double>> flightData = new List<Dictionary<string, double>>();
+    private List<Dictionary<string, double>> bonusFlightData = new List<Dictionary<string, double>>();
+
     public static List<Vector3> Positions { get; } = new List<Vector3>();
     public static List<Vector3> Velocities { get; } = new List<Vector3>();
     public static List<float> Times { get; } = new List<float>();
+    public static List<Vector3> MoonPositions { get; } = new List<Vector3>();
     private static string[] headers;
     [SerializeField] private GameObject _pointer;
     [SerializeField] private bool _showPoints = false;
-    [SerializeField] private float _initialScale = 1f;
+    [SerializeField] private float _initialScale = 0.1f;
 
     private void Awake()
     {
@@ -24,6 +31,8 @@ public class CSV_Parser : MonoBehaviour
         if (csvFile != null)
         {
             flightData = GetDataFromCSV(csvFile);
+            if (bonusFile != null)
+                bonusFlightData = GetDataFromCSV(bonusFile);
             PrintFlightData();
             DataList();
         }
@@ -74,12 +83,12 @@ public class CSV_Parser : MonoBehaviour
         return data;
     }
 
+
     private void PrintFlightData()
     {
         foreach (var row in flightData)
         {
             string rowString = string.Join(", ", row.Select(kvp => $"{kvp.Key}: {kvp.Value}"));
-            Debug.Log(rowString);
         }
     }
 
@@ -102,6 +111,18 @@ public class CSV_Parser : MonoBehaviour
                 if (_showPoints) Instantiate(_pointer, position, transform.rotation);
                 Velocities.Add(velocity);
                 Times.Add(time);
+            }
+        }
+
+        foreach (var row in bonusFlightData)
+        {
+            if (row.ContainsKey(headers[0]) &&
+                row.ContainsKey("MOON Rx(km)[J2000-EARTH]") &&
+                row.ContainsKey("MOON Ry(km)[J2000-EARTH]") &&
+                row.ContainsKey("MOON Rz(km)[J2000-EARTH]"))
+            {
+                Vector3 position = _initialScale * new Vector3((float)row["MOON Rx(km)[J2000-EARTH]"], (float)row["MOON Rz(km)[J2000-EARTH]"], (float)row["MOON Ry(km)[J2000-EARTH]"]);
+                MoonPositions.Add(position);
             }
         }
     }
