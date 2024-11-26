@@ -11,18 +11,22 @@ public class MoonMovement : MonoBehaviour
     [SerializeField] private Transform _mesh;
     private float moonSimTime;
 
+    void Awake()
+    {
+        manager = GameObject.FindGameObjectWithTag("AppManager").GetComponent<AppManager>();
+        AppManager.timeUtilObjs++;
+    }
 
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
-        manager = GameObject.FindGameObjectWithTag("AppManager").GetComponent<AppManager>();
 
         pathPositions = CSV_Parser.MoonPositions;
         pathTimes = CSV_Parser.Times;
 
         for (int i = 0; i < pathTimes.Count; i++)
         {
-            pathTimes[i] *= Mathf.Pow(60, 1 / 2); // replace 2 with number of time utilizing objects, idk why we do this i need to review code
+            pathTimes[i] *= Mathf.Pow(60, 1 / AppManager.timeUtilObjs);
         }
 
         _rb.position = pathPositions[0];

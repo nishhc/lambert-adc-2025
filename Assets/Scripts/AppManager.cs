@@ -9,6 +9,7 @@ public class AppManager : MonoBehaviour
     [SerializeField] public float simulationTime = 0f;
     [SerializeField] public float timeMultiplier = 1f;
     [SerializeField] public float timeStep = 1f;
+    public static int timeUtilObjs = 0;
     private bool isPaused = false;
 
     // Update is called once per frame

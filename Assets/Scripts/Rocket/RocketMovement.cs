@@ -14,11 +14,16 @@ public class RocketMovement : MonoBehaviour
     private float rocketSimTime;
 
 
+    void Awake()
+    {
+        manager = GameObject.FindGameObjectWithTag("AppManager").GetComponent<AppManager>();
+        AppManager.timeUtilObjs++;
+    }
+
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
         _rb.mass = 60129.7f;
-        manager = GameObject.FindGameObjectWithTag("AppManager").GetComponent<AppManager>();
 
         pathPositions = CSV_Parser.Positions;
         pathVelocities = CSV_Parser.Velocities;
@@ -26,7 +31,7 @@ public class RocketMovement : MonoBehaviour
 
         for (int i = 0; i < pathTimes.Count; i++)
         {
-            pathTimes[i] *= Mathf.Pow(60, (float)1 / 2); // replace 2 with number of time utilizing objects, idk why we do this i need to review code
+            pathTimes[i] *= Mathf.Pow(60, (float)1 / AppManager.timeUtilObjs);
         }
 
         _rb.position = pathPositions[0];
