@@ -238,10 +238,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 2560, y: 1440}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -306,7 +306,7 @@ GameObject:
   - component: {fileID: 89224798}
   - component: {fileID: 89224800}
   m_Layer: 5
-  m_Name: RawImage
+  m_Name: Minimap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -326,10 +326,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 86436529}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1013.0038, y: -461.00394}
-  m_SizeDelta: {x: 431.9852, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 266.99622, y: 258.99606}
+  m_SizeDelta: {x: 431.98523, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &89224798
 MonoBehaviour:
@@ -826,8 +826,9 @@ GameObject:
   - component: {fileID: 610670431}
   - component: {fileID: 610670430}
   - component: {fileID: 610670429}
+  - component: {fileID: 610670432}
   m_Layer: 5
-  m_Name: RawImage (1)
+  m_Name: Status
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -847,10 +848,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 86436529}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1013, y: -461}
-  m_SizeDelta: {x: 449.8185, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 267, y: 259}
+  m_SizeDelta: {x: 449.81848, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &610670429
 MonoBehaviour:
@@ -879,7 +880,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 0.043137256}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -901,6 +902,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 610670427}
   m_CullTransparentMesh: 1
+--- !u!114 &610670432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 610670427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a876b86f01f4574a912b7ac9af6806c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  orbitingEarth: {r: 1, g: 0, b: 0, a: 1}
+  toMoon: {r: 0.061807156, g: 0, b: 1, a: 1}
+  returnToEarth: {r: 0.19993055, g: 1, b: 0, a: 1}
+  EDL: {r: 1, g: 0.9505999, b: 0, a: 1}
+  status: {fileID: 610670430}
 --- !u!1 &685812899
 GameObject:
   m_ObjectHideFlags: 0

@@ -22,7 +22,6 @@ public class AppManager : MonoBehaviour
         if (!isPaused)
         {
             simulationTime += Time.deltaTime * timeMultiplier;
-            Debug.Log(simulationTime);
         }
 
         if (isPaused)
