@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class RocketMovement : MonoBehaviour
 {
-
     private Rigidbody _rb;
     private List<Vector3> pathPositions;
     private List<Vector3> pathVelocities;
@@ -12,7 +11,7 @@ public class RocketMovement : MonoBehaviour
     private AppManager manager;
     [SerializeField] private Transform _mesh;
     private float rocketSimTime;
-
+    [SerializeField][ReadOnlyField] private float totalDistance = 0;
 
     void Awake()
     {
@@ -41,7 +40,6 @@ public class RocketMovement : MonoBehaviour
     {
         rocketSimTime = (float)manager.simulationTime;
         UpdateStateAtTime(rocketSimTime);
-
     }
 
     void UpdateStateAtTime(float time)
@@ -60,6 +58,8 @@ public class RocketMovement : MonoBehaviour
 
         _rb.MovePosition(interpolatedPosition);
         _rb.velocity = interpolatedVelocity;
+
+        CalculateTotalDistance(segmentIndex, segmentProgress);
     }
 
     int FindSegment(float time)
@@ -68,19 +68,26 @@ public class RocketMovement : MonoBehaviour
         {
             if (time >= pathTimes[i] && time <= pathTimes[i + 1])
             {
-                //_mesh.transform.rotation = Quaternion.Euler(Vector3.RotateTowards(_mesh.transform.rotation.eulerAngles, pathPositions[i + 1], 1000000, 1000000000));
-
                 return i;
             }
         }
         return pathTimes.Count - 2;
     }
 
+    void CalculateTotalDistance(int segmentIndex, float segmentProgress)
+    {
+        totalDistance = 0;
+        for (int i = 0; i < segmentIndex; i++)
+        {
+            totalDistance += Vector3.Distance(pathPositions[i], pathPositions[i + 1]);
+        }
 
+        float segmentDistance = Vector3.Distance(pathPositions[segmentIndex], pathPositions[segmentIndex + 1]);
+        totalDistance += segmentDistance * segmentProgress;
+    }
 
     void OnDrawGizmos()
     {
-
         Gizmos.color = Color.green;
         if (pathPositions != null && pathPositions.Count > 1)
         {
