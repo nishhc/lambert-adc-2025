@@ -39,7 +39,7 @@ public class RocketMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        rocketSimTime = manager.simulationTime;
+        rocketSimTime = (float)manager.simulationTime;
         UpdateStateAtTime(rocketSimTime);
 
     }

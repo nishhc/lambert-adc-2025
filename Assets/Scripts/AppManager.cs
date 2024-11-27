@@ -6,7 +6,7 @@ public class AppManager : MonoBehaviour
 {
 
     [Range(0.0f, 778990.1988f)]
-    [SerializeField] public float simulationTime = 0f;
+    [SerializeField] public double simulationTime = 0f;
     [SerializeField] public float timeMultiplier = 1f;
     [SerializeField] public float timeStep = 1f;
     private bool isPaused = false;
@@ -22,6 +22,7 @@ public class AppManager : MonoBehaviour
         if (!isPaused)
         {
             simulationTime += Time.deltaTime * timeMultiplier;
+            Debug.Log(simulationTime);
         }
 
         if (isPaused)

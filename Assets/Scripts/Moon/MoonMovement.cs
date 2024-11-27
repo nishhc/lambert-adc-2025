@@ -34,7 +34,7 @@ public class MoonMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        moonSimTime = manager.simulationTime;
+        moonSimTime = (float)manager.simulationTime;
         UpdateStateAtTime(moonSimTime);
 
     }

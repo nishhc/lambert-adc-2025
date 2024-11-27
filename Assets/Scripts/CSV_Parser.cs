@@ -24,6 +24,7 @@ public class CSV_Parser : MonoBehaviour
 
     [SerializeField] private bool _showPoints = false;
     [SerializeField] private float _initialScale = 0.1f;
+    [SerializeField] private int _pointsEvery = 20;
 
     private void Awake()
     {
@@ -97,6 +98,8 @@ public class CSV_Parser : MonoBehaviour
 
     private void DataList()
     {
+        int i = 0;
+
         foreach (var row in flightData)
         {
             if (row.ContainsKey(headers[0]) &&
@@ -111,11 +114,13 @@ public class CSV_Parser : MonoBehaviour
                 Vector3 position = _initialScale * new Vector3((float)row["Rx(km)[J2000-EARTH]"], (float)row["Rz(km)[J2000-EARTH]"], (float)row["Ry(km)[J2000-EARTH]"]);
                 Vector3 velocity = _initialScale * new Vector3((float)row["Vx(km/s)[J2000-EARTH]"], (float)row["Vz(km/s)[J2000-EARTH]"], (float)row["Vy(km/s)[J2000-EARTH]"]);
                 Positions.Add(position);
-                if (_showPoints) Instantiate(_artemisPointer, position, transform.rotation);
+                if (_showPoints && i % _pointsEvery == 0) Instantiate(_artemisPointer, position, transform.rotation);
                 Velocities.Add(velocity);
                 Times.Add(time);
             }
+            i++;
         }
+        i = 0;
 
         foreach (var row in bonusFlightData)
         {
@@ -125,10 +130,11 @@ public class CSV_Parser : MonoBehaviour
                 row.ContainsKey("MOON Rz(km)[J2000-EARTH]"))
             {
                 Vector3 position = _initialScale * new Vector3((float)row["MOON Rx(km)[J2000-EARTH]"], (float)row["MOON Rz(km)[J2000-EARTH]"], (float)row["MOON Ry(km)[J2000-EARTH]"]);
-                if (_showPoints) Instantiate(_moonPointer, position, transform.rotation);
+                if (_showPoints && i % _pointsEvery == 0) Instantiate(_moonPointer, position, transform.rotation);
 
                 MoonPositions.Add(position);
             }
+            i++;
         }
     }
 }
