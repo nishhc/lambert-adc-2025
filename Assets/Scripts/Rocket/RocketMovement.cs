@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class RocketMovement : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class RocketMovement : MonoBehaviour
     private AppManager manager;
     [SerializeField] private Transform _mesh;
     private float rocketSimTime;
+    [SerializeField] private TextMeshProUGUI totalDist;
     [SerializeField][ReadOnlyField] private float totalDistance = 0;
 
     void Awake()
@@ -40,6 +42,7 @@ public class RocketMovement : MonoBehaviour
     {
         rocketSimTime = (float)manager.simulationTime;
         UpdateStateAtTime(rocketSimTime);
+        totalDist.text = $"Total Distance Traveled: {totalDistance * 10} km";
     }
 
     void UpdateStateAtTime(float time)
