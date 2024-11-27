@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using System;
 
 public class AppManager : MonoBehaviour
 {
@@ -13,10 +15,14 @@ public class AppManager : MonoBehaviour
     private bool isPaused = false;
     private bool tempPause = false;
     [SerializeField] private Slider slider;
+    [SerializeField] private TextMeshProUGUI elapsedTime;
+
     // Update is called once per frame
     void Update()
     {
-
+        if (simulationTime > 778990.1988f)
+            simulationTime = 778990.1988f;
+        elapsedTime.text = $"Elapsed Time: {Math.Round(simulationTime / 60, 2)} mins";
         if (Input.GetKeyDown(KeyCode.Space))
         {
             isPaused = !isPaused;
