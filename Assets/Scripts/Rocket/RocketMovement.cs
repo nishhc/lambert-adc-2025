@@ -34,12 +34,14 @@ public class RocketMovement : MonoBehaviour
       pathTimes[i] *= Mathf.Pow(60, (float)1 / 2); // manually edit this
     }
 
-    _rb.position = pathPositions[0];
+    _rb.position = pathPositions[1];
     UpdateStateAtTime(rocketSimTime);
   }
 
   void FixedUpdate()
   {
+    Debug.Log($"Rocket: {_rb.velocity * 10}");
+
     rocketSimTime = (float)manager.simulationTime;
     UpdateStateAtTime(rocketSimTime);
     totalDist.text = $"Total Distance Traveled: {totalDistance * 10} km";

@@ -35,10 +35,12 @@ public class VelocityUI : MonoBehaviour
     velocity = pathVelocities[segmentIndex];
     float magnitude = 0.9f + (velocity.magnitude / 11 * 0.2f);
     velocityText.text = "Velocity: " + magnitude.ToString("F4") + " km/s";
+    /*
     Debug.Log("Velocity X: " + velocity.x.ToString("F4") + " km/s");
     Debug.Log("Velocity Y: " + velocity.y.ToString("F4") + " km/s");
     Debug.Log("Velocity Z: " + velocity.z.ToString("F4") + " km/s");
     Debug.Log("Velocity: " + magnitude.ToString("F4") + " km/s");
+    */
     arrow.localScale = new Vector3(0.5f, magnitude, 0.5f);
     arrow.rotation = Quaternion.LookRotation(velocity);
   }
