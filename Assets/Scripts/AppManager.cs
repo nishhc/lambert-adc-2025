@@ -16,10 +16,19 @@ public class AppManager : MonoBehaviour
     private bool tempPause = false;
     [SerializeField] private Slider slider;
     [SerializeField] private TextMeshProUGUI elapsedTime;
+    [SerializeField] private TMP_InputField _timeMultiplierText;
 
     // Update is called once per frame
     void Update()
     {
+        if (float.TryParse(_timeMultiplierText.text, out float result))
+            timeMultiplier = result;
+        else
+        {
+            timeMultiplier = 1;
+            _timeMultiplierText.text = $"{1}";
+        }
+
         if (simulationTime > 778990.1988f)
             simulationTime = 778990.1988f;
         elapsedTime.text = $"Elapsed Time: {Math.Round(simulationTime / 60, 2)} mins";
