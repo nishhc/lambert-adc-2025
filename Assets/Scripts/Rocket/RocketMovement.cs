@@ -62,8 +62,15 @@ public class RocketMovement : MonoBehaviour
     _rb.MovePosition(interpolatedPosition);
     _rb.velocity = interpolatedVelocity;
 
+    Vector3 nextPoint = pathPositions[segmentIndex + 1];
+    Vector3 directionToNextPoint = (nextPoint - interpolatedPosition).normalized;
+
+    Quaternion rotation = Quaternion.LookRotation(directionToNextPoint, Vector3.up);
+    _mesh.rotation = Quaternion.Slerp(_mesh.rotation, rotation, Time.deltaTime * 5);
+
     CalculateTotalDistance(segmentIndex, segmentProgress);
   }
+
 
   int FindSegment(float time)
   {
