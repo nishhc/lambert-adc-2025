@@ -37,7 +37,7 @@ public class CSV_Parser : MonoBehaviour
             flightData = GetDataFromCSV(csvFile);
             if (bonusFile != null)
                 bonusFlightData = GetDataFromCSV(bonusFile);
-            PrintFlightData();
+            //PrintFlightData();
             DataList();
         }
         else
@@ -93,6 +93,7 @@ public class CSV_Parser : MonoBehaviour
         foreach (var row in flightData)
         {
             string rowString = string.Join(", ", row.Select(kvp => $"{kvp.Key}: {kvp.Value}"));
+            Debug.Log(rowString);
         }
     }
 
