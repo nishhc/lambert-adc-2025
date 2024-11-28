@@ -7,6 +7,13 @@ public class VelocityOnly : MonoBehaviour
 {
 
     private Rigidbody rb;
+    private int current = 0;
+    private AppManager manager;
+
+    void Awake()
+    {
+        manager = GameObject.FindGameObjectWithTag("AppManager").GetComponent<AppManager>();
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -16,13 +23,22 @@ public class VelocityOnly : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
-        // Watch this cube move using constant acceleration!
-        Time.timeScale = 5;
-        // its off because precision errors and non constant acceleration etc etc so we just use positions
-        // These accelerations are ONLY between 8.23 and 9.23 seconds, I did not implement calculations just yet
-        Debug.Log($"Cube: {rb.velocity * 10}");
-        rb.velocity = new Vector3(rb.velocity.x + -0.000296079781667f * Time.deltaTime, rb.velocity.y - 0.000536218818333f * Time.deltaTime, rb.velocity.z + -0.000696307965f * Time.deltaTime);
+        if (manager.simulationTime > CSV_Parser.Times[current])
+        {
+            current++;
+        }
+
+        float segDur = CSV_Parser.Times[current] - CSV_Parser.Times[current - 1];
+        float ax = (CSV_Parser.Velocities[current].x - CSV_Parser.Velocities[current - 1].x) / segDur;
+        print($"{CSV_Parser.Velocities[current].x} - {CSV_Parser.Velocities[current - 1].x}/{segDur}");
+        float ay = (CSV_Parser.Velocities[current].y - CSV_Parser.Velocities[current - 1].y) / segDur;
+        float az = (CSV_Parser.Velocities[current].z - CSV_Parser.Velocities[current - 1].z) / segDur;
+
+        //Debug.Log($"{current} {CSV_Parser.Times[current] / 60} {ax} {ay} {az}");
+        //Debug.Log($"Cube: {rb.velocity * 10}");
+
+        rb.velocity = new Vector3(rb.velocity.x + ax * Time.deltaTime, rb.velocity.y + ay * Time.deltaTime, rb.velocity.z + az * Time.deltaTime);
     }
 }

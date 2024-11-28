@@ -432,12 +432,12 @@ GameObject:
   - component: {fileID: 133085628}
   - component: {fileID: 133085632}
   m_Layer: 0
-  m_Name: TestCube
+  m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!54 &133085628
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3840,7 +3840,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ae81f58502279845a7baf4bdb471fb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  simulationTime: 0
+  simulationTime: 494.1888427734375
   timeMultiplier: 1
   timeStep: 1
   slider: {fileID: 718918441}
