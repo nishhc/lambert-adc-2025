@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UnityEngine.AI;
 
 public class RocketMovement : MonoBehaviour
 {
@@ -63,8 +62,11 @@ public class RocketMovement : MonoBehaviour
     _rb.MovePosition(interpolatedPosition);
     _rb.velocity = interpolatedVelocity;
     if (manager.isPaused) { _rb.velocity = Vector3.zero; }
-
     Vector3 nextPoint = pathPositions[segmentIndex + 1];
+    if (Vector3.Distance(transform.position, nextPoint) < 10)
+    {
+      nextPoint = pathPositions[segmentIndex + 10];
+    }
 
     Vector3 directionToNextPoint = (nextPoint - interpolatedPosition).normalized;
 
