@@ -1,27 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 
 public class CSV_Parser : MonoBehaviour
 {
     [SerializeField] private TextAsset csvFile;
-    [SerializeField] private TextAsset bonusFile;
-
-    private List<Dictionary<string, double>> flightData = new List<Dictionary<string, double>>();
-    private List<Dictionary<string, double>> bonusFlightData = new List<Dictionary<string, double>>();
 
     public static List<Vector3> Positions { get; } = new List<Vector3>();
     public static List<Vector3> Velocities { get; } = new List<Vector3>();
     public static List<float> Times { get; } = new List<float>();
-    public static List<Vector3> MoonPositions { get; } = new List<Vector3>();
-    private static string[] headers;
-    [SerializeField] private GameObject _artemisPointer;
-    [SerializeField] private GameObject _moonPointer;
 
+    [SerializeField] private GameObject _artemisPointer;
     [SerializeField] private bool _showPoints = false;
     [SerializeField] private float _initialScale = 0.1f;
     [SerializeField] private int _pointsEvery = 20;
@@ -34,11 +24,7 @@ public class CSV_Parser : MonoBehaviour
 
         if (csvFile != null)
         {
-            flightData = GetDataFromCSV(csvFile);
-            if (bonusFile != null)
-                bonusFlightData = GetDataFromCSV(bonusFile);
-            //PrintFlightData();
-            DataList();
+            ProcessCSVData(csvFile);
         }
         else
         {
@@ -46,96 +32,62 @@ public class CSV_Parser : MonoBehaviour
         }
     }
 
-    private List<Dictionary<string, double>> GetDataFromCSV(TextAsset csvData)
+    private void ProcessCSVData(TextAsset csvData)
     {
-        var dataLines = csvData.text.Split('\n');
-        if (dataLines.Length <= 1) return null;
+        var lines = csvData.text.Split('\n');
+        if (lines.Length <= 1) return;
 
-        headers = dataLines[0].Split(',').Select(h => h.Trim()).ToArray();
-        var data = new List<Dictionary<string, double>>();
+        string[] headers = lines[0].Split(',').Select(h => h.Trim()).ToArray();
 
-        for (int i = 1; i < dataLines.Length; i++)
+        // Extract column indices for relevant fields
+        int timeIndex = Array.IndexOf(headers, "PRECISE MISSION TIME (min)");
+        int ppxIndex = Array.IndexOf(headers, "Ppx");
+        int ppyIndex = Array.IndexOf(headers, "Ppy");
+        int ppzIndex = Array.IndexOf(headers, "Ppz");
+        int pvxIndex = Array.IndexOf(headers, "Pvx");
+        int pvyIndex = Array.IndexOf(headers, "Pvy");
+        int pvzIndex = Array.IndexOf(headers, "Pvz");
+
+        if (timeIndex == -1 || ppxIndex == -1 || ppyIndex == -1 || ppzIndex == -1 || pvxIndex == -1 || pvyIndex == -1 || pvzIndex == -1)
         {
-            var line = dataLines[i].Trim();
+            Debug.LogError("One or more required columns are missing in the CSV file.");
+            return;
+        }
+
+        for (int i = 1; i < lines.Length; i++)
+        {
+            var line = lines[i].Trim();
             if (string.IsNullOrEmpty(line)) continue;
 
             var values = line.Split(',');
-            var dataDict = new Dictionary<string, double>();
 
-            for (int j = 0; j < headers.Length && j < values.Length; j++)
+            if (values.Length <= Math.Max(timeIndex, Math.Max(ppzIndex, pvzIndex))) continue;
+
+            if (float.TryParse(values[timeIndex], out float time) &&
+                float.TryParse(values[ppxIndex], out float ppx) &&
+                float.TryParse(values[ppyIndex], out float ppy) &&
+                float.TryParse(values[ppzIndex], out float ppz) &&
+                float.TryParse(values[pvxIndex], out float pvx) &&
+                float.TryParse(values[pvyIndex], out float pvy) &&
+                float.TryParse(values[pvzIndex], out float pvz))
             {
-                var header = headers[j].Trim();
-                if (double.TryParse(values[j], out double doubleValue))
-                {
-                    dataDict[header] = doubleValue;
-                }
-
-                /* A lot of these are empty, so this just floods the console with warnings. not exactly sure what to do with this.
-                most likely using machine learning later for data cleaning
-                that'll be done by proj supervisors, not reg members unless experience shown 
-                
-                else 
-                {
-                    Debug.LogWarning($"Unable to parse '{values[j]}' as double in row {i + 1}, column '{headers[j]}'.");
-                }
-                */
-            }
-
-            data.Add(dataDict);
-        }
-
-        return data;
-    }
-
-
-    private void PrintFlightData()
-    {
-        foreach (var row in flightData)
-        {
-            string rowString = string.Join(", ", row.Select(kvp => $"{kvp.Key}: {kvp.Value}"));
-            Debug.Log(rowString);
-        }
-    }
-
-    private void DataList()
-    {
-        int i = 0;
-
-        foreach (var row in flightData)
-        {
-            if (row.ContainsKey(headers[0]) &&
-                row.ContainsKey("Rx(km)[J2000-EARTH]") &&
-                row.ContainsKey("Rz(km)[J2000-EARTH]") &&
-                row.ContainsKey("Ry(km)[J2000-EARTH]") &&
-                row.ContainsKey("Vx(km/s)[J2000-EARTH]") &&
-                row.ContainsKey("Vz(km/s)[J2000-EARTH]") &&
-                row.ContainsKey("Vy(km/s)[J2000-EARTH]"))
-            {
-                float time = (float)row[headers[0]];
-                Vector3 position = _initialScale * new Vector3((float)row["Rx(km)[J2000-EARTH]"], (float)row["Rz(km)[J2000-EARTH]"], (float)row["Ry(km)[J2000-EARTH]"]);
-                Vector3 velocity = _initialScale * new Vector3((float)row["Vx(km/s)[J2000-EARTH]"], (float)row["Vz(km/s)[J2000-EARTH]"], (float)row["Vy(km/s)[J2000-EARTH]"]);
-                Positions.Add(position);
-                if (_showPoints && i % _pointsEvery == 0) Instantiate(_artemisPointer, position, transform.rotation);
-                Velocities.Add(velocity);
                 Times.Add(time);
-            }
-            i++;
-        }
-        i = 0;
 
-        foreach (var row in bonusFlightData)
-        {
-            if (row.ContainsKey(headers[0]) &&
-                row.ContainsKey("MOON Rx(km)[J2000-EARTH]") &&
-                row.ContainsKey("MOON Ry(km)[J2000-EARTH]") &&
-                row.ContainsKey("MOON Rz(km)[J2000-EARTH]"))
+                Vector3 position = _initialScale * new Vector3(ppx, ppz, ppy);
+                Positions.Add(position);
+
+                Vector3 velocity = _initialScale * new Vector3(pvx, pvy, pvz);
+                Velocities.Add(velocity);
+
+                if (_showPoints && i % _pointsEvery == 0)
+                {
+                    Instantiate(_artemisPointer, position, Quaternion.identity);
+                }
+            }
+            else
             {
-                Vector3 position = _initialScale * new Vector3((float)row["MOON Rx(km)[J2000-EARTH]"], (float)row["MOON Rz(km)[J2000-EARTH]"], (float)row["MOON Ry(km)[J2000-EARTH]"]);
-                if (_showPoints && i % _pointsEvery == 0) Instantiate(_moonPointer, position, transform.rotation);
-
-                MoonPositions.Add(position);
+                Debug.LogWarning($"Unable to parse data at line {i + 1}");
             }
-            i++;
         }
     }
 }

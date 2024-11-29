@@ -31,7 +31,7 @@ public class RocketMovement : MonoBehaviour
 
     for (int i = 0; i < pathTimes.Count; i++)
     {
-      pathTimes[i] *= Mathf.Pow(60, (float)1 / 2); // manually edit this
+      pathTimes[i] *= Mathf.Pow(60, (float)1 / 1); // manually edit this
     }
 
     _rb.position = pathPositions[0];
@@ -68,7 +68,7 @@ public class RocketMovement : MonoBehaviour
     Quaternion rotation = Quaternion.LookRotation(directionToNextPoint, Vector3.up);
     _mesh.rotation = Quaternion.Slerp(_mesh.rotation, rotation, Time.deltaTime * 5);
 
-    CalculateTotalDistance(segmentIndex, segmentProgress);
+    // CalculateTotalDistance(segmentIndex, segmentProgress);
   }
 
 
