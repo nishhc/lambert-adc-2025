@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.AI;
 
 public class RocketMovement : MonoBehaviour
 {
@@ -61,12 +62,14 @@ public class RocketMovement : MonoBehaviour
 
     _rb.MovePosition(interpolatedPosition);
     _rb.velocity = interpolatedVelocity;
+    if (manager.isPaused) { _rb.velocity = Vector3.zero; }
 
     Vector3 nextPoint = pathPositions[segmentIndex + 1];
+
     Vector3 directionToNextPoint = (nextPoint - interpolatedPosition).normalized;
 
     Quaternion rotation = Quaternion.LookRotation(directionToNextPoint, Vector3.up);
-    _mesh.rotation = Quaternion.Slerp(_mesh.rotation, rotation, Time.deltaTime * 5);
+    _mesh.rotation = rotation;
 
     CalculateTotalDistance(segmentIndex, segmentProgress);
   }

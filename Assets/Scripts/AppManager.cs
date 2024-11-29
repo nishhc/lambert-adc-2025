@@ -12,7 +12,7 @@ public class AppManager : MonoBehaviour
     [SerializeField] public double simulationTime = 0f;
     [SerializeField] public float timeMultiplier = 1f;
     [SerializeField] public float timeStep = 1f;
-    private bool isPaused = false;
+    public bool isPaused { get; private set; } = false;
     private bool tempPause = false;
     [SerializeField] private Slider slider;
     [SerializeField] private TextMeshProUGUI elapsedTime;

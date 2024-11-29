@@ -6,10 +6,14 @@ using UnityEngine;
 public class CSV_Parser : MonoBehaviour
 {
     [SerializeField] private TextAsset csvFile;
+    [SerializeField] private TextAsset bonusFile;
 
     public static List<Vector3> Positions { get; } = new List<Vector3>();
     public static List<Vector3> Velocities { get; } = new List<Vector3>();
     public static List<float> Times { get; } = new List<float>();
+
+    public static List<float> MoonPositions { get; } = new List<float>();
+    public static List<float> MoonTimes { get; } = new List<float>();
 
     [SerializeField] private GameObject _artemisPointer;
     [SerializeField] private bool _showPoints = false;
@@ -76,7 +80,7 @@ public class CSV_Parser : MonoBehaviour
                 Vector3 position = _initialScale * new Vector3(ppx, ppz, ppy);
                 Positions.Add(position);
 
-                Vector3 velocity = _initialScale * new Vector3(pvx, pvy, pvz);
+                Vector3 velocity = _initialScale * new Vector3(pvx, pvz, pvy);
                 Velocities.Add(velocity);
 
                 if (_showPoints && i % _pointsEvery == 0)
