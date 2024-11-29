@@ -68,7 +68,7 @@ public class RocketMovement : MonoBehaviour
     Quaternion rotation = Quaternion.LookRotation(directionToNextPoint, Vector3.up);
     _mesh.rotation = Quaternion.Slerp(_mesh.rotation, rotation, Time.deltaTime * 5);
 
-    // CalculateTotalDistance(segmentIndex, segmentProgress);
+    CalculateTotalDistance(segmentIndex, segmentProgress);
   }
 
 
