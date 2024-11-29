@@ -9,6 +9,9 @@ public class VelocityUI : MonoBehaviour
   [SerializeField] private Transform arrow;
   [SerializeField] private TextMeshProUGUI velocityText;
 
+  [Header("Rocket")]
+  [SerializeField] private Transform rocketArrow;
+
   [Header("Debug")]
   [SerializeField] private Vector3 velocity;
 
@@ -44,6 +47,7 @@ public class VelocityUI : MonoBehaviour
     Debug.Log("Velocity: " + magnitude.ToString("F4") + " km/s");
     */
     Vector3 directionToNextPoint = (new Vector3(-velocity.x, velocity.y, -velocity.z) * 100).normalized;
+    rocketArrow.localScale = new Vector3(0.5f, 0.5f, 2f + (velocity.magnitude / 11 * 2f));
     arrow.rotation = Quaternion.LookRotation(directionToNextPoint, Vector3.up);
   }
 
