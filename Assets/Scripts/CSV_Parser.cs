@@ -35,6 +35,7 @@ public class CSV_Parser : MonoBehaviour
         Positions.Clear();
         Velocities.Clear();
         Times.Clear();
+        MoonPositions.Clear();
 
         // messy parser for regular file
         if (csvFile != null)
