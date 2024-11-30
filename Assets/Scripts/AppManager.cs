@@ -21,9 +21,9 @@ public class AppManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        simulationTime = Math.Clamp(simulationTime, 0, 778990.1988);
         // not super accurate but performant :D
-        float angle = -129.4742f;
+        float angle = -130.465f;
         Earth.transform.rotation = Quaternion.Euler(new Vector3(Earth.transform.eulerAngles.x, angle, Earth.transform.rotation.eulerAngles.z));
         double earthMins = simulationTime / 60;
         while (earthMins >= 1436.06817551388)
@@ -34,7 +34,7 @@ public class AppManager : MonoBehaviour
         Earth.transform.rotation = Quaternion.Euler(
         new Vector3(
             Earth.transform.eulerAngles.x,
-            Earth.transform.rotation.eulerAngles.y + (float)(0.2506844773 * earthMins),
+            Earth.transform.rotation.eulerAngles.y + (float)(-0.2506844773 * earthMins),
             Earth.transform.rotation.eulerAngles.z
         ));
 
