@@ -35,7 +35,16 @@ public class CSV_Parser : MonoBehaviour
         Positions.Clear();
         Velocities.Clear();
         Times.Clear();
+        minTimes.Clear();
         MoonPositions.Clear();
+        WpsaRanges.Clear();
+        WpsaStates.Clear();
+        DS54States.Clear();
+        DS54Ranges.Clear();
+        DS24Ranges.Clear();
+        DS24States.Clear();
+        DS34Ranges.Clear();
+        DS34Ranges.Clear();
 
         // messy parser for regular file
         if (csvFile != null)
@@ -190,6 +199,7 @@ public class CSV_Parser : MonoBehaviour
                     MoonPositions.Add(new Vector3(INITIAL_SCALE * mpx, INITIAL_SCALE * mpz, INITIAL_SCALE * mpy));
                 }
             }
+            print(MoonPositions.Count);
         }
 
     }
