@@ -13,7 +13,7 @@ public class CSV_Parser : MonoBehaviour
     public static List<Vector3> Velocities { get; } = new List<Vector3>();
     public static List<float> Times { get; } = new List<float>();
 
-    public static List<float> MoonPositions { get; } = new List<float>();
+    public static List<Vector3> MoonPositions { get; } = new List<Vector3>();
     public static List<float> minTimes { get; } = new List<float>();
     public static List<int> WpsaStates { get; } = new List<int>();
     public static List<float> WpsaRanges { get; } = new List<float>();
@@ -161,6 +161,35 @@ public class CSV_Parser : MonoBehaviour
             Debug.LogError("No Link Budget CSV file assigned in the inspector.");
         }
 
+        if (bonusFile != null)
+        {
+            var lines = bonusFile.text.Split('\n');
+            if (lines.Length <= 1) return;
+
+            string[] headers = lines[0].Split(',').Select(h => h.Trim()).ToArray();
+
+            // Extract column indices for relevant fields
+
+            int mpxi = Array.IndexOf(headers, "MOON Rx(km)[J2000-EARTH]");
+            int mpyi = Array.IndexOf(headers, "MOON Ry(km)[J2000-EARTH]");
+            int mpzi = Array.IndexOf(headers, "MOON Rz(km)[J2000-EARTH]");
+
+            for (int i = 1; i < lines.Length; i++)
+            {
+                var line = lines[i].Trim();
+                if (string.IsNullOrEmpty(line)) continue;
+
+                var values = line.Split(',');
+
+                if (float.TryParse(values[mpxi], out float mpx) &&
+                    float.TryParse(values[mpyi], out float mpy) &&
+                    float.TryParse(values[mpzi], out float mpz))
+                {
+
+                    MoonPositions.Add(new Vector3(INITIAL_SCALE * mpx, INITIAL_SCALE * mpz, INITIAL_SCALE * mpy));
+                }
+            }
+        }
 
     }
 

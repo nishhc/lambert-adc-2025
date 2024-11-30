@@ -20,12 +20,12 @@ public class MoonMovement : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
 
-        //pathPositions = CSV_Parser.MoonPositions;
-        pathTimes = CSV_Parser.Times;
+        pathPositions = CSV_Parser.MoonPositions;
+        pathTimes = CSV_Parser.minTimes;
 
         for (int i = 0; i < pathTimes.Count; i++)
         {
-            pathTimes[i] *= Mathf.Pow(60, (float)1 / 2);  // manually edit this
+            pathTimes[i] *= Mathf.Pow(60, (float)1 / 1);  // manually edit this
         }
 
         _rb.position = pathPositions[0];
