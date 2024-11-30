@@ -20,17 +20,21 @@ public class VelocityUI : MonoBehaviour
   private List<float> pathTimes;
   private List<Vector3> pathVelocities;
   public GameObject obj;
+  private CSV_Parser _parser;
+
 
 
   void Awake()
   {
     manager = GameObject.FindGameObjectWithTag("AppManager").GetComponent<AppManager>();
+    _parser = manager.gameObject.GetComponent<CSV_Parser>();
+
   }
 
   void Start()
   {
-    pathVelocities = CSV_Parser.Velocities;
-    pathTimes = CSV_Parser.Times;
+    pathVelocities = _parser.Velocities;
+    pathTimes = _parser.Times;
   }
 
   private void FixedUpdate()

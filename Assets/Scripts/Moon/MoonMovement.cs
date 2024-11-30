@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class MoonMovement : MonoBehaviour
 {
@@ -10,18 +11,21 @@ public class MoonMovement : MonoBehaviour
     private AppManager manager;
     [SerializeField] private Transform _mesh;
     private float moonSimTime;
+    private CSV_Parser _parser;
 
     void Awake()
     {
         manager = GameObject.FindGameObjectWithTag("AppManager").GetComponent<AppManager>();
+        _parser = manager.gameObject.GetComponent<CSV_Parser>();
+
     }
 
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
 
-        pathPositions = CSV_Parser.MoonPositions;
-        pathTimes = CSV_Parser.minTimes;
+        pathPositions = new List<Vector3>(_parser.MoonPositions);
+        pathTimes = new List<float>(_parser.minTimes);
 
         for (int i = 0; i < pathTimes.Count; i++)
         {
@@ -29,19 +33,12 @@ public class MoonMovement : MonoBehaviour
         }
 
         _rb.position = pathPositions[0];
-        UpdateStateAtTime(moonSimTime);
     }
 
     void FixedUpdate()
     {
         moonSimTime = (float)manager.simulationTime;
-        UpdateStateAtTime(moonSimTime);
-
-    }
-
-    void UpdateStateAtTime(float time)
-    {
-        moonSimTime = Mathf.Clamp(time, pathTimes[0], pathTimes[pathTimes.Count - 1]);
+        moonSimTime = Mathf.Clamp(moonSimTime, pathTimes[0], pathTimes[pathTimes.Count - 1]);
 
         int segmentIndex = FindSegment(moonSimTime);
         float segmentStartTime = pathTimes[segmentIndex];
@@ -54,6 +51,7 @@ public class MoonMovement : MonoBehaviour
 
         _rb.MovePosition(interpolatedPosition);
     }
+
 
     int FindSegment(float time)
     {

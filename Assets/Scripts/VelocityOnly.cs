@@ -10,33 +10,38 @@ public class VelocityOnly : MonoBehaviour
     private int current = 0;
     private AppManager manager;
     private Vector3 vel;
+    private CSV_Parser _parser;
+
 
     void Awake()
     {
         manager = GameObject.FindGameObjectWithTag("AppManager").GetComponent<AppManager>();
+        _parser = manager.gameObject.GetComponent<CSV_Parser>();
+
+
     }
     // Start is called before the first frame update
     void Start()
     {
-        while (manager.simulationTime / 60 > CSV_Parser.Times[current]) { current++; }
+        while (manager.simulationTime / 60 > _parser.Times[current]) { current++; }
         rb = GetComponent<Rigidbody>();
-        rb.position = CSV_Parser.Positions[current];
-        vel = CSV_Parser.Velocities[current];
+        rb.position = _parser.Positions[current];
+        vel = _parser.Velocities[current];
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        if (manager.simulationTime > CSV_Parser.Times[current])
+        if (manager.simulationTime > _parser.Times[current])
         {
             current++;
         }
 
-        float segDur = CSV_Parser.Times[current] - CSV_Parser.Times[current - 1];
-        float ax = (CSV_Parser.Velocities[current].x - CSV_Parser.Velocities[current - 1].x) / segDur;
-        float ay = (CSV_Parser.Velocities[current].y - CSV_Parser.Velocities[current - 1].y) / segDur;
-        float az = (CSV_Parser.Velocities[current].z - CSV_Parser.Velocities[current - 1].z) / segDur;
+        float segDur = _parser.Times[current] - _parser.Times[current - 1];
+        float ax = (_parser.Velocities[current].x - _parser.Velocities[current - 1].x) / segDur;
+        float ay = (_parser.Velocities[current].y - _parser.Velocities[current - 1].y) / segDur;
+        float az = (_parser.Velocities[current].z - _parser.Velocities[current - 1].z) / segDur;
         Vector3 a = new Vector3(ax, ay, az);
 
         vel += a * Time.deltaTime;

@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine.AI;
 
 public class RocketMovement : MonoBehaviour
 {
   private List<Vector3> _csvPositions;
-  private List<Vector3> _csvVelocities;
   private List<float> _csvTimes;
   private AppManager _manager;
   private CSV_Parser _parser;
@@ -31,9 +31,8 @@ public class RocketMovement : MonoBehaviour
   private void Start()
   {
 
-    _csvPositions = CSV_Parser.Positions;
-    _csvVelocities = CSV_Parser.Velocities;
-    _csvTimes = CSV_Parser.Times;
+    _csvPositions = new List<Vector3>(_parser.Positions);
+    _csvTimes = new List<float>(_parser.Times);
 
     for (int i = 0; i < _csvTimes.Count; i++)
     {
@@ -70,7 +69,6 @@ public class RocketMovement : MonoBehaviour
     Vector3 interpolatedPosition = Vector3.Lerp(_csvPositions[segmentIndex], _csvPositions[segmentIndex + 1], segmentProgress);
 
     transform.position = interpolatedPosition;
-    _calculatedVelocity = Vector3.Lerp(_csvVelocities[segmentIndex], _csvVelocities[segmentIndex + 1], segmentProgress); //interpolation of vel is same as applying constant accel
 
     Vector3 nextPoint = _csvPositions[segmentIndex + 1];
 
@@ -90,25 +88,25 @@ public class RocketMovement : MonoBehaviour
     _totalDist.text = $"Total Distance Traveled: {_totalDistance * (1 / _parser.INITIAL_SCALE)} km";
 
     int budgetSegmentIndex = FindMinuteBasedSegment(_rocketSimTime / 60);
-    //print(CSV_Parser.minTimes[budgetSegmentIndex]);
-    //print($"{CSV_Parser.WpsaStates[budgetSegmentIndex]} {CSV_Parser.DS54States[budgetSegmentIndex]} {CSV_Parser.DS24States[budgetSegmentIndex]} {CSV_Parser.DS34States[budgetSegmentIndex]}");
-    Dictionary<string, float> rangeSatelliteMatches = new Dictionary<string, float>
+    print(_parser.minTimes[budgetSegmentIndex]);
+    //print($"{_parser.WpsaStates[budgetSegmentIndex]} {_parser.DS54States[budgetSegmentIndex]} {_parser.DS24States[budgetSegmentIndex]} {_parser.DS34States[budgetSegmentIndex]}");
+    Dictionary<string, double> rangeSatelliteMatches = new Dictionary<string, double>
     {
-      {"WPSA", CSV_Parser.WpsaStates[budgetSegmentIndex] == 1 ? LinkBudget(12, CSV_Parser.WpsaRanges[budgetSegmentIndex]) : -1},
-      {"DS54", CSV_Parser.DS54States[budgetSegmentIndex] == 1 ? LinkBudget(34, CSV_Parser.DS54Ranges[budgetSegmentIndex]) : -1},
-      {"DS24", CSV_Parser.DS24States[budgetSegmentIndex] == 1 ? LinkBudget(34, CSV_Parser.DS24Ranges[budgetSegmentIndex]) : -1},
-      {"DS34", CSV_Parser.DS34States[budgetSegmentIndex] == 1 ? LinkBudget(34, CSV_Parser.DS34Ranges[budgetSegmentIndex]) : -1},
+      //inssheet 0 means off 1 on, so set range t -1 if off in sheet
+      {"WPSA", _parser.WpsaStates[budgetSegmentIndex] == 1 ? LinkBudget(12, _parser.WpsaRanges[budgetSegmentIndex]) : -1},
+      {"DS54", _parser.DS54States[budgetSegmentIndex] == 1 ? LinkBudget(34, _parser.DS54Ranges[budgetSegmentIndex]) : -1},
+      {"DS24", _parser.DS24States[budgetSegmentIndex] == 1 ? LinkBudget(34, _parser.DS24Ranges[budgetSegmentIndex]) : -1},
+      {"DS34", _parser.DS34States[budgetSegmentIndex] == 1 ? LinkBudget(34, _parser.DS34Ranges[budgetSegmentIndex]) : -1},
     };
 
-    SortedDictionary<string, float> sorted = new SortedDictionary<string, float>(rangeSatelliteMatches);
-    string allLinkBudget = "Link Budget (-1 means off)";
-    foreach (KeyValuePair<string, float> kvp in sorted)
+    IOrderedEnumerable<KeyValuePair<string, double>> sorted = rangeSatelliteMatches.OrderBy(kvp => kvp.Value);
+    IEnumerable<KeyValuePair<string, double>> reversed = sorted.Reverse();
+    string allLinkBudget = "Link Budget (most optimal to least optimal)";
+    foreach (KeyValuePair<string, double> kvp in reversed)
     {
-      allLinkBudget += $"\n{kvp.Key}: {kvp.Value} kbps";
+      allLinkBudget += $"\n{kvp.Key}: " + (kvp.Value != -1 ? $"{Math.Round(kvp.Value, 4)} kbps" : "OFF");
     }
     _linkBudget.text = allLinkBudget;
-
-
 
   }
 
@@ -124,12 +122,12 @@ public class RocketMovement : MonoBehaviour
 
   private int FindMinuteBasedSegment(float time)
   {
-    for (int i = 0; i < CSV_Parser.minTimes.Count - 1; i++)
+    for (int i = 0; i < _parser.minTimes.Count - 1; i++)
     {
-      if (time >= CSV_Parser.minTimes[i] && time <= CSV_Parser.minTimes[i + 1])
+      if (time >= _parser.minTimes[i] && time <= _parser.minTimes[i + 1])
         return i;
     }
-    return CSV_Parser.minTimes.Count - 2;
+    return _parser.minTimes.Count - 2;
   }
 
   private void OnDrawGizmos()
@@ -150,7 +148,7 @@ public class RocketMovement : MonoBehaviour
     }
   }
 
-  private float LinkBudget(double dr, double R)
+  private double LinkBudget(double dr, double R)
   {
     double Pt = 10.0;
     double Gt = 9.0;
@@ -172,7 +170,7 @@ public class RocketMovement : MonoBehaviour
 
     double Bn = Math.Pow(10, ((term1 + term2 + term3 + term4) * 0.1)) / 1000;
 
-    return Mathf.Min((float)Bn, 10000);
+    return Math.Min((float)Bn, 10000);
   }
 }
 
