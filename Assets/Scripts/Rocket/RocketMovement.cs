@@ -37,7 +37,7 @@ public class RocketMovement : MonoBehaviour
 
     for (int i = 0; i < _csvTimes.Count; i++)
     {
-      _csvTimes[i] *= Mathf.Pow(60, (float)1 / 1); // manually edit the denomintaor of power to amount of objects using this system of interpolated positions
+      _csvTimes[i] *= 60; // manually edit the denomintaor of power to amount of objects using this system of interpolated positions
     }
 
     transform.position = _csvPositions[0];

@@ -25,7 +25,7 @@ public class MoonMovement : MonoBehaviour
 
         for (int i = 0; i < pathTimes.Count; i++)
         {
-            pathTimes[i] *= Mathf.Pow(60, (float)1 / 1);  // manually edit this
+            pathTimes[i] *= 60;  // manually edit this
         }
 
         _rb.position = pathPositions[0];
