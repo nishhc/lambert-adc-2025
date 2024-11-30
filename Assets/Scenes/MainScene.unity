@@ -205,7 +205,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &50676626
 Transform:
   m_ObjectHideFlags: 0
@@ -2393,7 +2393,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   arrow: {fileID: 147948643}
   velocityText: {fileID: 463758554}
-  rocketArrow: {fileID: 1713484449}
+  rocketArrow: {fileID: 50676625}
   velocity: {x: 0, y: 0, z: 0}
   obj: {fileID: 0}
 --- !u!114 &762286624
@@ -2853,7 +2853,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  m_IsOn: 0
+  m_IsOn: 1
 --- !u!1 &970365654
 GameObject:
   m_ObjectHideFlags: 0
@@ -4344,11 +4344,6 @@ MeshFilter:
 --- !u!4 &1685817614 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: acc428707754d40c89c78fa9e31496da, type: 3}
-  m_PrefabInstance: {fileID: 1872050920}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1713484449 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: acc428707754d40c89c78fa9e31496da, type: 3}
   m_PrefabInstance: {fileID: 1872050920}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1720759316
