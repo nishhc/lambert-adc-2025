@@ -531,7 +531,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 131761836}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: XYZ Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -939,7 +939,7 @@ Camera:
   m_GameObject: {fileID: 309870289}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
+  m_ClearFlags: 1
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -1218,7 +1218,7 @@ GameObject:
   - component: {fileID: 369523432}
   - component: {fileID: 369523431}
   - component: {fileID: 369523430}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Y Axis
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1796,7 +1796,7 @@ GameObject:
   m_Component:
   - component: {fileID: 479782730}
   - component: {fileID: 479782729}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: VelocityCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1842,7 +1842,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 183
+    m_Bits: 247
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: e0113a45dc29944d69734a571c14be54, type: 2}
   m_TargetDisplay: 0
@@ -3277,7 +3277,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 989149993}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3492,10 +3492,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Arrow
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: acc428707754d40c89c78fa9e31496da, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 1721408997582961648, guid: acc428707754d40c89c78fa9e31496da, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 653a46cb9369a9848a669c4977f786b9, type: 2}
+    - target: {fileID: 5242552770846821567, guid: acc428707754d40c89c78fa9e31496da, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 4083742295819354737, guid: acc428707754d40c89c78fa9e31496da, type: 3}
@@ -3750,6 +3758,7 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 7869873546869171050, guid: 2c3170d3fbd372e489860a408069229b, type: 3}
     - {fileID: -8700617353114198275, guid: 2c3170d3fbd372e489860a408069229b, type: 3}
+    - {fileID: 65702495048144492, guid: 2c3170d3fbd372e489860a408069229b, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c3170d3fbd372e489860a408069229b, type: 3}
@@ -3984,7 +3993,7 @@ GameObject:
   - component: {fileID: 1155617418}
   - component: {fileID: 1155617417}
   - component: {fileID: 1155617416}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: X-Axis
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4223,7 +4232,7 @@ GameObject:
   - component: {fileID: 1243967969}
   - component: {fileID: 1243967968}
   - component: {fileID: 1243967967}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Z-Axis
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4601,7 +4610,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1452112554}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CamPivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4633,7 +4642,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1502758269}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: VelocityArrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4829,7 +4838,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1720759317}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: VelocityObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
