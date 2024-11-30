@@ -4723,6 +4723,7 @@ MonoBehaviour:
   slider: {fileID: 718918441}
   elapsedTime: {fileID: 543276162}
   _timeMultiplierText: {fileID: 908356632}
+  Earth: {fileID: 1739506143}
 --- !u!1001 &1872050920
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -17,10 +17,30 @@ public class AppManager : MonoBehaviour
     [SerializeField] private Slider slider;
     [SerializeField] private TextMeshProUGUI elapsedTime;
     [SerializeField] private TMP_InputField _timeMultiplierText;
-
+    [SerializeField] private GameObject Earth;
     // Update is called once per frame
     void Update()
     {
+
+        // not super accurate but performant :D
+        float angle = -129.4742f;
+        Earth.transform.rotation = Quaternion.Euler(new Vector3(Earth.transform.eulerAngles.x, angle, Earth.transform.rotation.eulerAngles.z));
+        double earthMins = simulationTime / 60;
+        while (earthMins >= 1436.06817551388)
+        {
+            earthMins -= 1436.06817551388;
+        }
+        for (float i = 0; i < earthMins; i++)
+        {
+            Earth.transform.rotation = Quaternion.Euler(
+            new Vector3(
+                Earth.transform.eulerAngles.x,
+                Earth.transform.rotation.eulerAngles.y + 0.2506844773f,
+                Earth.transform.rotation.eulerAngles.z
+            )
+        );
+
+        }
         if (float.TryParse(_timeMultiplierText.text, out float result))
             timeMultiplier = result;
         else
@@ -58,6 +78,7 @@ public class AppManager : MonoBehaviour
 
         if (tempPause)
             simulationTime = slider.value * 60;
+
 
     }
 
