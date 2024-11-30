@@ -40,7 +40,7 @@ public class VelocityUI : MonoBehaviour
   private void FixedUpdate()
   {
     time = (float)manager.simulationTime;
-    int segmentIndex = FindSegment(time);
+    int segmentIndex = FindSegment(time / 60);
     velocity = pathVelocities[segmentIndex];
     float magnitude = velocity.magnitude * 10;//0.9f + (velocity.magnitude / 11 * 0.2f);
     velocityText.text = "Velocity: " + magnitude.ToString("F4") + " km/s";

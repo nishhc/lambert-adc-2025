@@ -12,9 +12,9 @@ public class CSV_Parser : MonoBehaviour
     public List<Vector3> Velocities { get; } = new List<Vector3>();
     public List<float> Times { get; } = new List<float>();
 
-    public List<Vector3> MoonPositions = new List<Vector3>();
-    public List<float> minTimes = new List<float>();
-    public List<int> WpsaStates = new List<int>();
+    public List<Vector3> MoonPositions { get; } = new List<Vector3>();
+    public List<float> minTimes { get; } = new List<float>();
+    public List<int> WpsaStates { get; } = new List<int>();
     public List<float> WpsaRanges { get; } = new List<float>();
     public List<int> DS54States { get; } = new List<int>();
     public List<float> DS54Ranges { get; } = new List<float>();
@@ -41,10 +41,10 @@ public class CSV_Parser : MonoBehaviour
 
 
             if (float.TryParse(current[Array.IndexOf(bonusHeaders, "MOON Rx(km)[J2000-EARTH]")], out float mpx) &&
-                float.TryParse(current[Array.IndexOf(bonusHeaders, "MOON Ry(km)[J2000-EARTH]")], out float mpz) &&
-                float.TryParse(current[Array.IndexOf(bonusHeaders, "MOON Rz(km)[J2000-EARTH]")], out float mpy))
+                float.TryParse(current[Array.IndexOf(bonusHeaders, "MOON Ry(km)[J2000-EARTH]")], out float mpy) &&
+                float.TryParse(current[Array.IndexOf(bonusHeaders, "MOON Rz(km)[J2000-EARTH]")], out float mpz))
             {
-                MoonPositions.Add(new Vector3(mpx, mpz, mpy));
+                MoonPositions.Add(INITIAL_SCALE * new Vector3(mpx, mpz, mpy));
             }
             // caused due to an error being thrown somewhere
 
@@ -69,6 +69,11 @@ public class CSV_Parser : MonoBehaviour
                 Times.Add(float.Parse(current[Array.IndexOf(mainHeaders, "PRECISE MISSION TIME (min)")]));
                 Positions.Add(INITIAL_SCALE * new Vector3(ppx, ppz, ppy));
                 Velocities.Add(INITIAL_SCALE * new Vector3(pvx, pvz, pvy));
+
+                if (_showPoints && i % (_pointsEvery - 1) == 0)
+                {
+                    Instantiate(_artemisPointer, INITIAL_SCALE * new Vector3(ppx, ppz, ppy), transform.rotation);
+                }
             }
 
             // INITIAL SCALE provided to avoid floating point precision errors, do NOT remove anynone else who is working
