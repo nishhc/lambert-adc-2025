@@ -30,17 +30,17 @@ public class AppManager : MonoBehaviour
         {
             earthMins -= 1436.06817551388;
         }
-        for (float i = 0; i < earthMins; i++)
-        {
-            Earth.transform.rotation = Quaternion.Euler(
-            new Vector3(
-                Earth.transform.eulerAngles.x,
-                Earth.transform.rotation.eulerAngles.y + 0.2506844773f,
-                Earth.transform.rotation.eulerAngles.z
-            )
-        );
 
-        }
+        Earth.transform.rotation = Quaternion.Euler(
+        new Vector3(
+            Earth.transform.eulerAngles.x,
+            Earth.transform.rotation.eulerAngles.y + (float)(0.2506844773 * earthMins),
+            Earth.transform.rotation.eulerAngles.z
+        ));
+
+
+
+
         if (float.TryParse(_timeMultiplierText.text, out float result))
             timeMultiplier = result;
         else
