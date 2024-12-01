@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//test pull request
+using UnityEngine.UI;
+using TMPro;
+
 public class CameraControl : MonoBehaviour
 {
     [SerializeField] float movementSpeed;
@@ -9,17 +11,42 @@ public class CameraControl : MonoBehaviour
     [SerializeField] float cameraSensitivity;
 
     [SerializeField] private Camera cam;
+    [SerializeField] private Transform velShip;
+    [SerializeField] private TMP_Text ToggleMovmement;
+    [SerializeField] private TMP_Text SnapUnsnap;
+
     private Vector3 anchorPoint;
     private Quaternion anchorRot;
 
-    /*private void Start()
-    {
-        camera = GetComponent<Camera>();
-    }*/
+    private bool canMove = true;
 
     void Update()
     {
-        if (Input.GetMouseButton(1))
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            canMove = !canMove;
+            Debug.Log($"Can Move: {canMove}");
+            if (canMove)
+                ToggleMovmement.SetText("Disable movement");
+            else
+            {
+                ToggleMovmement.SetText("Enable movement");
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.H) && velShip != null)
+        {
+            if (transform.parent == null) {
+                transform.SetParent(velShip);
+                SnapUnsnap.SetText("Unsnap from ship");
+            }
+            else {
+                transform.SetParent(null);
+                SnapUnsnap.SetText("Snap to ship");
+            }
+        }
+
+        if (canMove && Input.GetMouseButton(1))
         {
             Vector3 move = Vector3.zero;
 
@@ -62,6 +89,7 @@ public class CameraControl : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.None;
         }
+
         if (Input.GetMouseButton(1))
         {
             Quaternion rot = anchorRot;
