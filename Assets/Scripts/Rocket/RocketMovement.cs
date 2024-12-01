@@ -21,6 +21,10 @@ public class RocketMovement : MonoBehaviour
   public Vector3 _calculatedVelocity { get; private set; } = Vector3.zero;
   [SerializeField] private List<Transform> _satellites;
   [SerializeField] private LayerMask _ignoreSatelliteLayers;
+  [SerializeField] private TextMeshProUGUI _positionUI;
+  [SerializeField] private TextMeshProUGUI _numberAvailable;
+  [SerializeField]
+  private Color[] antennaColors;
 
   private void Awake()
   {
@@ -61,7 +65,7 @@ public class RocketMovement : MonoBehaviour
     }
     */
 
-
+    _positionUI.text = $"Position\n{transform.position.x * 10}\n{transform.position.z * 10}\n{transform.position.y * 10}";
 
     int segmentIndex = FindPreciseSegment(_rocketSimTime);
     float segmentProgress = (_rocketSimTime - _csvTimes[segmentIndex]) / (_csvTimes[segmentIndex + 1] - _csvTimes[segmentIndex]);
@@ -101,11 +105,19 @@ public class RocketMovement : MonoBehaviour
 
     IOrderedEnumerable<KeyValuePair<string, double>> sorted = rangeSatelliteMatches.OrderBy(kvp => kvp.Value);
     IEnumerable<KeyValuePair<string, double>> reversed = sorted.Reverse();
-    string allLinkBudget = "Link Budget (most optimal to least optimal)";
+    string allLinkBudget = "Antenna Availability (most optimal to least optimal)";
+    int numAvail = 0;
     foreach (KeyValuePair<string, double> kvp in reversed)
     {
-      allLinkBudget += $"\n{kvp.Key}: " + (kvp.Value != -1 ? $"{Math.Round(kvp.Value, 4)} kbps" : "OFF");
+      if (kvp.Value != -1)
+      {
+        numAvail += 1;
+        allLinkBudget += $"\n{kvp.Key}: {Math.Round(kvp.Value, 4)} kbps";
+      }
+      else { allLinkBudget += $"\n{kvp.Key}: OFF"; }
     }
+    _numberAvailable.text = $"Antennas Available: {numAvail}";
+    _numberAvailable.color = antennaColors[numAvail];
     _linkBudget.text = allLinkBudget;
 
   }
