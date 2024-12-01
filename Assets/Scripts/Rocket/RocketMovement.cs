@@ -88,7 +88,7 @@ public class RocketMovement : MonoBehaviour
     _totalDist.text = $"Total Distance Traveled: {_totalDistance * (1 / _parser.INITIAL_SCALE)} km";
 
     int budgetSegmentIndex = FindMinuteBasedSegment(_rocketSimTime / 60);
-    print(_parser.minTimes[budgetSegmentIndex]);
+    //    print(_parser.minTimes[budgetSegmentIndex]);
     //print($"{_parser.WpsaStates[budgetSegmentIndex]} {_parser.DS54States[budgetSegmentIndex]} {_parser.DS24States[budgetSegmentIndex]} {_parser.DS34States[budgetSegmentIndex]}");
     Dictionary<string, double> rangeSatelliteMatches = new Dictionary<string, double>
     {

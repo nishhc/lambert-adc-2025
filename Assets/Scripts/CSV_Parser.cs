@@ -88,7 +88,6 @@ public class CSV_Parser : MonoBehaviour
         {
 
             string[] current = linkbudgetLines[i].Split(',');
-            print(Array.IndexOf(linkBudgetHeaders, "MISSION ELAPSED TIME (min)"));
             if (float.TryParse(current[Array.IndexOf(linkBudgetHeaders, "MISSION ELAPSED TIME (min)")], out float missionElapsedTime) &&
                 int.TryParse(current[Array.IndexOf(linkBudgetHeaders, "WPSA")], out int wpsaState) &&
                 float.TryParse(current[Array.IndexOf(linkBudgetHeaders, "WPSA Range")], out float wpsaRange) &&
