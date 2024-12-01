@@ -39,6 +39,7 @@ public class CameraControl : MonoBehaviour
             if (transform.parent == null) {
                 transform.SetParent(velShip);
                 SnapUnsnap.SetText("Unsnap from ship");
+                transform.position = velShip.position;
             }
             else {
                 transform.SetParent(null);
