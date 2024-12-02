@@ -4299,10 +4299,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 193.685
       objectReference: {fileID: 0}
+    - target: {fileID: -2818939159209168709, guid: c4a6caed7dab7b040a39dda49b6905f9, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 65f4956b532cf734d89aa2d452069d1d, type: 2}
     - target: {fileID: -789198292323072150, guid: c4a6caed7dab7b040a39dda49b6905f9, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 65f4956b532cf734d89aa2d452069d1d, type: 2}
+    - target: {fileID: 19844304480547264, guid: c4a6caed7dab7b040a39dda49b6905f9, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 101
+      objectReference: {fileID: 0}
+    - target: {fileID: 19844304480547264, guid: c4a6caed7dab7b040a39dda49b6905f9, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 101
+      objectReference: {fileID: 0}
+    - target: {fileID: 19844304480547264, guid: c4a6caed7dab7b040a39dda49b6905f9, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 101
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c4a6caed7dab7b040a39dda49b6905f9, type: 3}
       propertyPath: m_Name
       value: Earth
@@ -4316,7 +4332,8 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 4385538709299273564, guid: c4a6caed7dab7b040a39dda49b6905f9, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c4a6caed7dab7b040a39dda49b6905f9, type: 3}
@@ -5558,7 +5575,7 @@ MonoBehaviour:
   csvParser: {fileID: 1864654194}
   lineRenderer: {fileID: 1433942034}
   updateInterval: 0.2
-  skipRate: 5
+  skipRate: 1
 --- !u!4 &1433942036
 Transform:
   m_ObjectHideFlags: 0
@@ -6301,7 +6318,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75f59a97e0c364a31a51d7ade840f016, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  csvFile: {fileID: 4900000, guid: 351b070483f5bdd47909e7f0081c0322, type: 3}
+  csvFile: {fileID: 4900000, guid: 0a340094c7c22d6458de021492a16b84, type: 3}
   bonusFile: {fileID: 4900000, guid: ce011f89b9ceece4a87f3477d2c39e99, type: 3}
   linkBudgetFile: {fileID: 4900000, guid: 8da3fdb7eb2cb4840aee56ac3e54339f, type: 3}
   _artemisPointer: {fileID: 464083195}
