@@ -23,7 +23,7 @@ public class AppManager : MonoBehaviour
     {
         simulationTime = Math.Clamp(simulationTime, 0, 778990.1988);
         // not super accurate but performant :D
-        float angle = 1.21f;
+        float angle = 0.7f;
         Earth.transform.rotation = Quaternion.Euler(new Vector3(Earth.transform.eulerAngles.x, angle, Earth.transform.rotation.eulerAngles.z));
         double earthMins = simulationTime / 60;
         while (earthMins >= 1436.06817551388)
