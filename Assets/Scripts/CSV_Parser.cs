@@ -9,7 +9,7 @@ public class CSV_Parser : MonoBehaviour
     [SerializeField] private TextAsset linkBudgetFile;
 
     public List<Vector3> Positions { get; } = new List<Vector3>();
-    public List<Vector3> Velocities { get; } = new List<Vector3>();
+    public List<Vector3> Velocities = new List<Vector3>();
     public List<float> Times { get; } = new List<float>();
 
     public List<Vector3> MoonPositions { get; } = new List<Vector3>();

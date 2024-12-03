@@ -9,6 +9,8 @@ using UnityEngine.AI;
 public class RocketMovement : MonoBehaviour
 {
   private List<Vector3> _csvPositions;
+  private List<Vector3> _csvVelocities;
+
   private List<float> _csvTimes;
   private AppManager _manager;
   private CSV_Parser _parser;
@@ -36,6 +38,7 @@ public class RocketMovement : MonoBehaviour
   {
 
     _csvPositions = new List<Vector3>(_parser.Positions);
+    _csvVelocities = new List<Vector3>(_parser.Velocities);
     _csvTimes = new List<float>(_parser.Times);
 
     for (int i = 0; i < _csvTimes.Count; i++)
@@ -64,19 +67,19 @@ public class RocketMovement : MonoBehaviour
 
     }
     */
+    _rocketSimTime = (float)_manager.simulationTime;
 
     _positionUI.text = $"Position\n{transform.position.x * 10}\n{transform.position.z * 10}\n{transform.position.y * 10}";
 
     int segmentIndex = FindPreciseSegment(_rocketSimTime);
     float segmentProgress = (_rocketSimTime - _csvTimes[segmentIndex]) / (_csvTimes[segmentIndex + 1] - _csvTimes[segmentIndex]);
-
     Vector3 interpolatedPosition = Vector3.Lerp(_csvPositions[segmentIndex], _csvPositions[segmentIndex + 1], segmentProgress);
 
     transform.position = interpolatedPosition;
 
     Vector3 nextPoint = _csvPositions[segmentIndex + 1];
 
-    Vector3 directionToNextPoint = (nextPoint - interpolatedPosition).normalized;
+    Vector3 directionToNextPoint = _csvVelocities[segmentIndex].normalized;
     _mesh.rotation = Quaternion.LookRotation(directionToNextPoint, Vector3.up); //tip of rocket facing forward
 
     _totalDistance = 0;
@@ -88,7 +91,6 @@ public class RocketMovement : MonoBehaviour
     float segmentDistance = Vector3.Distance(_csvPositions[segmentIndex], _csvPositions[segmentIndex + 1]);
     _totalDistance += segmentDistance * segmentProgress;
 
-    _rocketSimTime = (float)_manager.simulationTime;
     _totalDist.text = $"Total Distance Traveled: {_totalDistance * (1 / _parser.INITIAL_SCALE)} km";
 
     int budgetSegmentIndex = FindMinuteBasedSegment(_rocketSimTime / 60);
