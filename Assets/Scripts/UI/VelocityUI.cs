@@ -51,7 +51,7 @@ public class VelocityUI : MonoBehaviour
     Debug.Log("Velocity: " + magnitude.ToString("F4") + " km/s");
     */
     Vector3 directionToNextPoint = (new Vector3(-velocity.x, velocity.y, -velocity.z) * 100).normalized;
-    rocketArrow.transform.localScale = new Vector3(0.5f, 0.5f, velocity.magnitude * 6);
+    //rocketArrow.transform.localScale = new Vector3(0.5f, 0.5f, velocity.magnitude * 6);
     arrow.rotation = Quaternion.LookRotation(directionToNextPoint, Vector3.up);
   }
 

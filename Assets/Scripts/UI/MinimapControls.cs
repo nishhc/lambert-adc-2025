@@ -6,7 +6,7 @@ public class MinimapControls : MonoBehaviour, IPointerEnterHandler, IPointerExit
     private bool hover = false;
     [SerializeField] private Camera minimapCam;
     [SerializeField] private float zoomAmount;
-    
+
     private void Update()
     {
         if (hover)
@@ -15,14 +15,18 @@ public class MinimapControls : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
             if (scroll > 0f)
             {
-               if (minimapCam.orthographicSize - zoomAmount > 0)
+                if (minimapCam.orthographicSize - zoomAmount > 0)
                 {
                     minimapCam.orthographicSize -= zoomAmount;
+                    minimapCam.orthographicSize = Mathf.Max(minimapCam.orthographicSize, 20);
+
+
                 }
             }
             else if (scroll < 0f)
             {
                 minimapCam.orthographicSize += zoomAmount;
+                minimapCam.orthographicSize = Mathf.Min(minimapCam.orthographicSize, 5000);
             }
         }
     }
