@@ -51,7 +51,7 @@ public class AppManager : MonoBehaviour
 
         if (simulationTime > 778990.1988f)
             simulationTime = 778990.1988f;
-        elapsedTime.text = $"Elapsed Time: {Math.Round(simulationTime / 60, 2)} mins";
+        elapsedTime.text = $"{Math.Round(simulationTime / 60, 2)} mins";
         if (Input.GetKeyDown(KeyCode.Space))
         {
             isPaused = !isPaused;

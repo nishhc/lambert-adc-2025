@@ -107,18 +107,18 @@ public class RocketMovement : MonoBehaviour
 
     IOrderedEnumerable<KeyValuePair<string, double>> sorted = rangeSatelliteMatches.OrderBy(kvp => kvp.Value);
     IEnumerable<KeyValuePair<string, double>> reversed = sorted.Reverse();
-    string allLinkBudget = "Antenna Availability (most optimal to least optimal)";
+    string allLinkBudget = "Antennas Available: 0";
     int numAvail = 0;
     foreach (KeyValuePair<string, double> kvp in reversed)
     {
       if (kvp.Value != -1)
       {
         numAvail += 1;
-        allLinkBudget += $"\n{kvp.Key}: {Math.Round(kvp.Value, 4)} kbps";
+        allLinkBudget = $"Antennas Available: {numAvail}" + $"\n{kvp.Key}: {Math.Round(kvp.Value, 4)} kbps";
       }
       else { allLinkBudget += $"\n{kvp.Key}: OFF"; }
     }
-    _numberAvailable.text = $"Antennas Available: {numAvail}";
+    //_numberAvailable.text = $"Antennas Available: {numAvail}";
     _numberAvailable.color = antennaColors[numAvail];
     _linkBudget.text = allLinkBudget;
 
