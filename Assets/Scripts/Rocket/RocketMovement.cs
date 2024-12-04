@@ -80,7 +80,7 @@ public class RocketMovement : MonoBehaviour
     Vector3 nextPoint = _csvPositions[segmentIndex + 1];
 
     Vector3 directionToNextPoint = _csvVelocities[segmentIndex].normalized;
-    _mesh.rotation = Quaternion.LookRotation(directionToNextPoint, Vector3.up); //tip of rocket facing forward
+    _mesh.rotation = Quaternion.LookRotation(_csvTimes[segmentIndex] > 8.23f ? directionToNextPoint : (nextPoint - transform.position), Vector3.up); //tip of rocket facing forward
 
     _totalDistance = 0;
     for (int i = 0; i < segmentIndex; i++)

@@ -2872,7 +2872,7 @@
     "m_Hidden": false,
     "m_ShaderOutputName": "Z",
     "m_StageCapability": 3,
-    "m_Value": 96682.359375,
+    "m_Value": 98468.0625,
     "m_DefaultValue": 0.0,
     "m_Labels": [
         "Z"
@@ -3597,7 +3597,7 @@
     "m_Hidden": false,
     "m_ShaderOutputName": "X",
     "m_StageCapability": 3,
-    "m_Value": 25544.58984375,
+    "m_Value": 17436.94921875,
     "m_DefaultValue": 0.0,
     "m_Labels": []
 }
