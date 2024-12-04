@@ -9,7 +9,7 @@ public class CSV_Parser : MonoBehaviour
     [SerializeField] private TextAsset linkBudgetFile;
 
     public List<Vector3> Positions { get; } = new List<Vector3>();
-    public List<Vector3> Velocities { get; } = new List<Vector3>();
+    public List<Vector3> Velocities = new List<Vector3>();
     public List<float> Times { get; } = new List<float>();
 
     public List<Vector3> MoonPositions { get; } = new List<Vector3>();
@@ -25,7 +25,6 @@ public class CSV_Parser : MonoBehaviour
 
 
     [SerializeField] private GameObject _artemisPointer;
-    [SerializeField] private bool _showPoints = false;
     [SerializeField] public float INITIAL_SCALE = 0.1f;
     [SerializeField] private int _pointsEvery = 20;
 
@@ -70,10 +69,6 @@ public class CSV_Parser : MonoBehaviour
                 Positions.Add(INITIAL_SCALE * new Vector3(ppx, ppz, ppy));
                 Velocities.Add(INITIAL_SCALE * new Vector3(pvx, pvz, pvy));
 
-                if (_showPoints && i % (_pointsEvery - 1) == 0)
-                {
-                    Instantiate(_artemisPointer, INITIAL_SCALE * new Vector3(ppx, ppz, ppy), transform.rotation);
-                }
             }
 
             // INITIAL SCALE provided to avoid floating point precision errors, do NOT remove anynone else who is working

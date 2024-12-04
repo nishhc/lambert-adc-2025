@@ -1,0 +1,8 @@
+﻿`````,Timestamp (hours),Mass (kg),Change in Mass,Notes,ESA Infographic,NASA Infographic,Change in acceleration,Still Present,Based on Application
+0,0,60129.73972,,,1,1,,,
+48.63913203,0.81,59529.04604,600.69,Core stage main engine detachment?,,"2, 3",,,Opposite of the Earth – first orbit
+121.094466,2.018,33231.915,26297.13,"Gradual change, engine burn?","3, 4","4, 5",,,"Burn to make the orbit bigger, 4 & 5 on NASA"
+196.649466,3.277,26046.18107,7185.73,"Sudden change, some detach?, calculation shows the change of mass is close to Launch Abort System",5,6,,"Crew Module, Service Module?",ICPS detachment on NASA
+284.6427943,4.744,25791.25327,254.93,"Sudden chance, some detach?",6,6,,,"NASA 7, Upper Stage Detachment, burn to get away from icps"
+795.282716,13.255,25573.76014,217.49,"Short gradual change, trajectory adjustment?",6,"7, 8",,,"Perigee Raise Burn, NASA 8"
+1492.276718,24.871,22666.29909,2907.46,"Medium gradual change, trajectory adjustment?",6,9,,,"NASA 9, Earth orbit Escape"
