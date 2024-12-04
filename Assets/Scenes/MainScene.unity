@@ -1422,7 +1422,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &401638372
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1942,8 +1942,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Velocity 00.0000 km/s
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 991a52426e700ab49b838c7fa0358a88, type: 2}
+  m_sharedMaterial: {fileID: -1589577996836226998, guid: 991a52426e700ab49b838c7fa0358a88, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2276,8 +2276,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 15.247314, y: 0.0034484863}
-  m_SizeDelta: {x: 228.092, y: 28.31}
+  m_AnchoredPosition: {x: 103.8, y: 0.0034484863}
+  m_SizeDelta: {x: 381.3, y: 28.31}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &542823319
 MonoBehaviour:
@@ -2301,8 +2301,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Show Velocity on Rocket
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 612ee653c0ba8f648a72f37d00d5dc7f, type: 2}
+  m_sharedMaterial: {fileID: 78481875164815238, guid: 612ee653c0ba8f648a72f37d00d5dc7f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2326,14 +2326,14 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
-  m_fontSizeBase: 20
+  m_fontSize: 22.8
+  m_fontSizeBase: 22.8
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -3088,8 +3088,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -134.8999, y: -189.78198}
-  m_SizeDelta: {x: 379.875, y: 379.56396}
+  m_AnchoredPosition: {x: -175.6, y: -189.78198}
+  m_SizeDelta: {x: 547.94, y: 379.56396}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &762286623
 MonoBehaviour:
@@ -4031,7 +4031,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -403, y: -58}
+  m_AnchoredPosition: {x: -546.4, y: -58}
   m_SizeDelta: {x: 257.19995, y: 28.317017}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &933996445
@@ -4311,7 +4311,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1036101516
 RectTransform:
   m_ObjectHideFlags: 0
