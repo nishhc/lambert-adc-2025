@@ -69,7 +69,7 @@ public class RocketMovement : MonoBehaviour
     */
     _rocketSimTime = (float)_manager.simulationTime;
 
-    _positionUI.text = $"Position\n{transform.position.x * 10}\n{transform.position.z * 10}\n{transform.position.y * 10}";
+    _positionUI.text = $"{transform.position.x * 10}\n{transform.position.z * 10}\n{transform.position.y * 10}";
 
     int segmentIndex = FindPreciseSegment(_rocketSimTime);
     float segmentProgress = (_rocketSimTime - _csvTimes[segmentIndex]) / (_csvTimes[segmentIndex + 1] - _csvTimes[segmentIndex]);
@@ -91,7 +91,7 @@ public class RocketMovement : MonoBehaviour
     float segmentDistance = Vector3.Distance(_csvPositions[segmentIndex], _csvPositions[segmentIndex + 1]);
     _totalDistance += segmentDistance * segmentProgress;
 
-    _totalDist.text = $"Total Distance Traveled: {_totalDistance * (1 / _parser.INITIAL_SCALE)} km";
+    _totalDist.text = $"{_totalDistance * (1 / _parser.INITIAL_SCALE)} km";
 
     int budgetSegmentIndex = FindMinuteBasedSegment(_rocketSimTime / 60);
     //    print(_parser.minTimes[budgetSegmentIndex]);
