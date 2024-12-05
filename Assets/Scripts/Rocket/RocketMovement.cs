@@ -89,6 +89,7 @@ public class RocketMovement : MonoBehaviour
     }
 
     float segmentDistance = Vector3.Distance(_csvPositions[segmentIndex], _csvPositions[segmentIndex + 1]);
+    Debug.Log(segmentDistance);
     _totalDistance += segmentDistance * segmentProgress;
 
     _totalDist.text = $"{_totalDistance * (1 / _parser.INITIAL_SCALE)} km";

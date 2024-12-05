@@ -43,7 +43,7 @@ public class VelocityUI : MonoBehaviour
     int segmentIndex = FindSegment(time / 60);
     velocity = pathVelocities[segmentIndex];
     float magnitude = velocity.magnitude * 10;//0.9f + (velocity.magnitude / 11 * 0.2f);
-    velocityText.text = "Velocity: " + magnitude.ToString("F4") + " km/s";
+    velocityText.text = "Velocity:\n" + magnitude.ToString("F4") + " km/s";
     /*
     Debug.Log("Velocity X: " + velocity.x.ToString("F4") + " km/s");
     Debug.Log("Velocity Y: " + velocity.y.ToString("F4") + " km/s");
