@@ -15,7 +15,12 @@ public class AppManager : MonoBehaviour
     public bool isPaused { get; private set; } = false;
     private bool tempPause = false;
     [SerializeField] private Slider slider;
-    [SerializeField] private TextMeshProUGUI elapsedTime;
+    [SerializeField] private TextMeshProUGUI dys;
+    [SerializeField] private TextMeshProUGUI hrs;
+    [SerializeField] private TextMeshProUGUI mins;
+    [SerializeField] private TextMeshProUGUI secs;
+    [SerializeField] private TextMeshProUGUI justMins;
+
     [SerializeField] private TMP_InputField _timeMultiplierText;
     [SerializeField] private GameObject Earth;
     // Update is called once per frame
@@ -51,7 +56,20 @@ public class AppManager : MonoBehaviour
 
         if (simulationTime > 778990.1988f)
             simulationTime = 778990.1988f;
-        elapsedTime.text = $"{Math.Round(simulationTime / 60, 2)} mins";
+        int totalSeconds = (int)simulationTime;
+        int days = totalSeconds / (24 * 3600);
+        totalSeconds %= (24 * 3600);
+        int hours = totalSeconds / 3600;
+        totalSeconds %= 3600;
+        int minutes = totalSeconds / 60;
+        int seconds = totalSeconds % 60;
+
+        dys.text = days.ToString();
+        justMins.text = $"Elapsed Time: {Math.Round(simulationTime / 60, 2)} mins";
+        hrs.text = hours <= 9 ? $"0{hours.ToString()}" : hours.ToString();
+        mins.text = minutes <= 9 ? $"0{minutes.ToString()}" : minutes.ToString();
+        secs.text = seconds <= 9 ? $"0{seconds.ToString()}" : seconds.ToString();
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             isPaused = !isPaused;
