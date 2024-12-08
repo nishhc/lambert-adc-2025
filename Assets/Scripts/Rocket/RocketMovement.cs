@@ -5,6 +5,7 @@ using TMPro;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine.AI;
+using TreeEditor;
 
 public class RocketMovement : MonoBehaviour
 {
@@ -73,8 +74,7 @@ public class RocketMovement : MonoBehaviour
 
     int segmentIndex = FindPreciseSegment(_rocketSimTime);
     float segmentProgress = (_rocketSimTime - _csvTimes[segmentIndex]) / (_csvTimes[segmentIndex + 1] - _csvTimes[segmentIndex]);
-    Vector3 interpolatedPosition = Vector3.Lerp(_csvPositions[segmentIndex], _csvPositions[segmentIndex + 1], segmentProgress);
-
+    Vector3 interpolatedPosition = Vector3.Slerp(_csvPositions[segmentIndex], _csvPositions[segmentIndex + 1], segmentProgress);
     transform.position = interpolatedPosition;
 
     Vector3 nextPoint = _csvPositions[segmentIndex + 1];
@@ -108,17 +108,18 @@ public class RocketMovement : MonoBehaviour
 
     IOrderedEnumerable<KeyValuePair<string, double>> sorted = rangeSatelliteMatches.OrderBy(kvp => kvp.Value);
     IEnumerable<KeyValuePair<string, double>> reversed = sorted.Reverse();
-    string allLinkBudget = "Antennas Available: 0";
+    string allLinkBudget = "";
     int numAvail = 0;
     foreach (KeyValuePair<string, double> kvp in reversed)
     {
       if (kvp.Value != -1)
       {
         numAvail += 1;
-        allLinkBudget = $"Antennas Available: {numAvail}" + $"\n{kvp.Key}: {Math.Round(kvp.Value, 4)} kbps";
+        allLinkBudget += $"{kvp.Key}: {Math.Round(kvp.Value, 4)} kbps\n";
       }
-      else { allLinkBudget += $"\n{kvp.Key}: OFF"; }
+      else { allLinkBudget += $"{kvp.Key}: OFF\n"; }
     }
+    allLinkBudget = $"Antennas Available: {numAvail}\n" + allLinkBudget;
     //_numberAvailable.text = $"Antennas Available: {numAvail}";
     _numberAvailable.color = antennaColors[numAvail];
     _linkBudget.text = allLinkBudget;
