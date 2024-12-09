@@ -70,11 +70,11 @@ public class RocketMovement : MonoBehaviour
     */
     _rocketSimTime = (float)_manager.simulationTime;
 
-    _positionUI.text = $"{transform.position.x * 10}\n{transform.position.z * 10}\n{transform.position.y * 10}";
+    _positionUI.text = $"{transform.position.x * 10} km\n{transform.position.z * 10} km\n{transform.position.y * 10} km";
 
     int segmentIndex = FindPreciseSegment(_rocketSimTime);
     float segmentProgress = (_rocketSimTime - _csvTimes[segmentIndex]) / (_csvTimes[segmentIndex + 1] - _csvTimes[segmentIndex]);
-    Vector3 interpolatedPosition = Vector3.Slerp(_csvPositions[segmentIndex], _csvPositions[segmentIndex + 1], segmentProgress);
+    Vector3 interpolatedPosition = Vector3.Lerp(_csvPositions[segmentIndex], _csvPositions[segmentIndex + 1], segmentProgress);
     transform.position = interpolatedPosition;
 
     Vector3 nextPoint = _csvPositions[segmentIndex + 1];
@@ -89,7 +89,7 @@ public class RocketMovement : MonoBehaviour
     }
 
     float segmentDistance = Vector3.Distance(_csvPositions[segmentIndex], _csvPositions[segmentIndex + 1]);
-    Debug.Log(segmentDistance);
+    //Debug.Log(segmentDistance);
     _totalDistance += segmentDistance * segmentProgress;
 
     _totalDist.text = $"{_totalDistance * (1 / _parser.INITIAL_SCALE)} km";

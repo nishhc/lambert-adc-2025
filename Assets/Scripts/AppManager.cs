@@ -20,8 +20,10 @@ public class AppManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI mins;
     [SerializeField] private TextMeshProUGUI secs;
     [SerializeField] private TextMeshProUGUI justMins;
-
     [SerializeField] private TMP_InputField _timeMultiplierText;
+    [SerializeField] private GameObject _colorkey;
+    [SerializeField] private GameObject _controls;
+    [SerializeField] private GameObject _help;
     [SerializeField] private GameObject Earth;
     // Update is called once per frame
     void Update()
@@ -126,4 +128,25 @@ public class AppManager : MonoBehaviour
         Debug.Log("notDragging");
 
     }
+
+    public void Help()
+    {
+        print("Help");
+        _help.SetActive(!_help.activeSelf);
+    }
+
+    public void Controls()
+    {
+        print("Controls");
+        _controls.SetActive(!_controls.activeSelf);
+    }
+
+    public void ColorKey()
+    {
+        print("Keys");
+        _colorkey.SetActive(!_colorkey.activeSelf);
+    }
+
+
+
 }
