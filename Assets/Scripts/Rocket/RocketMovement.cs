@@ -26,8 +26,9 @@ public class RocketMovement : MonoBehaviour
   [SerializeField] private LayerMask _ignoreSatelliteLayers;
   [SerializeField] private TextMeshProUGUI _positionUI;
   [SerializeField] private TextMeshProUGUI _numberAvailable;
-  [SerializeField]
-  private Color[] antennaColors;
+  [SerializeField] private TextMeshProUGUI[] _antennaTexts;
+  [SerializeField] private Color[] _antennaColors = new Color[4];
+
 
   private void Awake()
   {
@@ -108,21 +109,25 @@ public class RocketMovement : MonoBehaviour
 
     IOrderedEnumerable<KeyValuePair<string, double>> sorted = rangeSatelliteMatches.OrderBy(kvp => kvp.Value);
     IEnumerable<KeyValuePair<string, double>> reversed = sorted.Reverse();
-    string allLinkBudget = "";
+    //string allLinkBudget = "";
     int numAvail = 0;
+    int index = 0;
     foreach (KeyValuePair<string, double> kvp in reversed)
     {
       if (kvp.Value != -1)
       {
         numAvail += 1;
-        allLinkBudget += $"{kvp.Key}: {Math.Round(kvp.Value, 4)} kbps\n";
+        // allLinkBudget += $"{kvp.Key}: {Math.Round(kvp.Value, 4)} kbps\n"; // old link budget text
+        _antennaTexts[index].text = $"{kvp.Key}: {Math.Round(kvp.Value, 4)} kbps";
+        _antennaTexts[index].color = _antennaColors[index];
       }
-      else { allLinkBudget += $"{kvp.Key}: OFF\n"; }
+      else { _antennaTexts[index].text = $"{kvp.Key}: OFF\n"; _antennaTexts[index].color = _antennaColors[3]; }
+      index++;
+
     }
-    allLinkBudget = $"Antennas Available: {numAvail}\n" + allLinkBudget;
+    //allLinkBudget = $"Antennas Available: {numAvail}\n" + allLinkBudget;
     //_numberAvailable.text = $"Antennas Available: {numAvail}";
-    _numberAvailable.color = antennaColors[numAvail];
-    _linkBudget.text = allLinkBudget;
+
 
   }
 
