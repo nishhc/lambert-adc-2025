@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
@@ -11,7 +13,9 @@ public class ColorStatus : MonoBehaviour
     [SerializeField] private Color toMoon;
     [SerializeField] private Color returnToEarth;
     [SerializeField] private Color EDL;
-    [SerializeField] private RawImage status;
+
+    [SerializeField] private float[] maxTimesStageOrder = new float[4];
+    [SerializeField] private TextMeshProUGUI status;
     private AppManager manager;
 
     void Awake()
@@ -30,17 +34,17 @@ public class ColorStatus : MonoBehaviour
     void Update()
     {
         double time = manager.simulationTime;
-        if (time < 90000)
+        if (time < maxTimesStageOrder[1])
         {
             status.color = orbitingEarth;
         }
         else
         {
             status.color = toMoon;
-            if (time > 435000)
+            if (time > maxTimesStageOrder[2])
             {
                 status.color = returnToEarth;
-                if (time > 778950)
+                if (time > maxTimesStageOrder[3])
                 {
                     status.color = EDL;
                 }
