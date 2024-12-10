@@ -36,16 +36,24 @@ public class ColorStatus : MonoBehaviour
         double time = manager.simulationTime;
         if (time < maxTimesStageOrder[1])
         {
+            status.text = "STAGE 1: ORBITING EARTH";
             status.color = orbitingEarth;
         }
         else
+
         {
+            status.text = "STAGE 2: TO THE MOON";
+
             status.color = toMoon;
             if (time > maxTimesStageOrder[2])
             {
+                status.text = "STAGE 3: RETURN TO EARTH";
+
                 status.color = returnToEarth;
                 if (time > maxTimesStageOrder[3])
                 {
+                    status.text = "STAGE 4: ENTRY DECENT AND LANDING";
+
                     status.color = EDL;
                 }
             }

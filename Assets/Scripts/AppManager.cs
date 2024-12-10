@@ -25,6 +25,9 @@ public class AppManager : MonoBehaviour
     [SerializeField] private GameObject _controls;
     [SerializeField] private GameObject _help;
     [SerializeField] private GameObject Earth;
+    [SerializeField]
+    private Image playbutton;
+    [SerializeField] private Sprite[] playpause = new Sprite[2];
     // Update is called once per frame
     void Update()
     {
@@ -74,7 +77,7 @@ public class AppManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            isPaused = !isPaused;
+            Pause();
         }
 
         if (!isPaused && !tempPause)
@@ -122,6 +125,19 @@ public class AppManager : MonoBehaviour
         Debug.Log("isDragging");
     }
 
+    public void Pause()
+    {
+        isPaused = !isPaused;
+        if (isPaused)
+        {
+            playbutton.sprite = playpause[1];
+        }
+        else
+        {
+            playbutton.sprite = playpause[0];
+
+        }
+    }
     public void NotDragging()
     {
         tempPause = false;
