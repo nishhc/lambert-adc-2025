@@ -6,6 +6,8 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine.AI;
 using TreeEditor;
+using UnityEditor.Rendering.PostProcessing;
+using Palmmedia.ReportGenerator.Core;
 
 public class RocketMovement : MonoBehaviour
 {
@@ -29,6 +31,9 @@ public class RocketMovement : MonoBehaviour
   [SerializeField] private TextMeshProUGUI[] _antennaTexts;
   [SerializeField] private Color[] _antennaColors = new Color[4];
 
+  [SerializeField] private GameObject ICPS;
+  [SerializeField] private GameObject serviceModule;
+
 
   private void Awake()
   {
@@ -49,6 +54,9 @@ public class RocketMovement : MonoBehaviour
     }
 
     transform.position = _csvPositions[0];
+
+
+
   }
 
   private void FixedUpdate()
@@ -125,6 +133,81 @@ public class RocketMovement : MonoBehaviour
       index++;
 
     }
+
+
+    double rocket_mins = _rocketSimTime / 60;
+    // in progress 
+    if (rocket_mins > 47.639 && rocket_mins < 48.639)
+    {
+      print("Perigee Raise Manuevar");
+    }
+    else if (rocket_mins > 99.639 && rocket_mins < 121.0944)
+    {
+      print("Apogee Raise Burn");
+    }
+    else if (rocket_mins > 196.09447 && rocket_mins < 196.64947)
+    {
+      print("ICPS Detach abd burn");
+    }
+    else if (rocket_mins > 283.64947 && rocket_mins < 284.6428)
+    {
+      print("Seperation Burn");
+    }
+    else if (rocket_mins > 792.44937 && rocket_mins < 795.28272)
+    {
+      print("Perigree Raise Burn");
+    }
+    else if (rocket_mins > 1486.6203 && rocket_mins < 1492.2767)
+    {
+      print("Escape Orbit");
+    }
+
+    bool perigeeMDone = false;
+    bool apogee = false;
+    bool icpsBreak = false;
+    bool sepBur = false;
+    bool perigBurn = false;
+    bool escapeOrbit = false;
+    bool serviceOff = false;
+    // finished 
+    if (rocket_mins > 48.639)
+    {
+      perigeeMDone = true;
+      print("Perigee Raise Done");
+    }
+    if (rocket_mins > 121.0944)
+    {
+      apogee = true;
+      print("Apogee Raise Burn Done");
+    }
+    if (rocket_mins > 196.64947)
+    {
+      icpsBreak = true;
+      print("ICPS Detach abd burn");
+    }
+    if (rocket_mins > 284.6428)
+    {
+      sepBur = true;
+      print("Seperation Burn done");
+    }
+    if (rocket_mins > 795.28272)
+    {
+      perigBurn = true;
+      print("Perigree Raise Burn Done");
+    }
+    if (rocket_mins > 1486.6203 && rocket_mins < 1492.2767)
+    {
+      escapeOrbit = true;
+      print("Escape Orbit");
+    }
+
+    if (rocket_mins > 12969.95)
+    {
+      serviceOff = true;
+    }
+    ICPS.SetActive(!icpsBreak);
+    serviceModule.SetActive(!serviceOff);
+
     //allLinkBudget = $"Antennas Available: {numAvail}\n" + allLinkBudget;
     //_numberAvailable.text = $"Antennas Available: {numAvail}";
 

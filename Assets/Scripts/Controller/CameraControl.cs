@@ -15,6 +15,7 @@ public class CameraControl : MonoBehaviour
     [SerializeField] private Transform velShip;
     [SerializeField] private TMP_Text ToggleMovmement;
     [SerializeField] private TMP_Text SnapUnsnap;
+    [SerializeField] private MinimapControls minimap;
 
     private Vector3 anchorPoint;
     private Quaternion anchorRot;
@@ -55,21 +56,21 @@ public class CameraControl : MonoBehaviour
         Vector3 move = Vector3.zero;
 
         float speed = movementSpeed * (Input.GetKey(KeyCode.LeftShift) ? sprintMultiplier : 1f) * Time.deltaTime * 9.1f;
-        move += Vector3.forward * Input.mouseScrollDelta.y * 5;
+        move += Vector3.forward * (!minimap.hover ? Input.mouseScrollDelta.y : 0) * 5;
 
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+        if (Input.GetKey(KeyCode.W) /*|| Input.GetKey(KeyCode.UpArrow)*/)
         {
             move += Vector3.forward * speed;
         }
-        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+        if (Input.GetKey(KeyCode.S) /*|| Input.GetKey(KeyCode.DownArrow) */)
         {
             move -= Vector3.forward * speed;
         }
-        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.D) /*|| Input.GetKey(KeyCode.RightArrow) */)
         {
             move += Vector3.right * speed;
         }
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.A) /*|| Input.GetKey(KeyCode.LeftArrow)*/)
         {
             move -= Vector3.right * speed;
         }

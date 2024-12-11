@@ -91,6 +91,7 @@ public class AppManager : MonoBehaviour
         if (isPaused)
         {
             simulationTime = slider.value * 60;
+            /*
             if (Input.GetKey(KeyCode.RightArrow))
             {
                 StepForward();
@@ -99,6 +100,7 @@ public class AppManager : MonoBehaviour
             {
                 StepBackward();
             }
+            */
         }
 
         if (tempPause)

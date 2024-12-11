@@ -53,7 +53,6 @@ public class VelocityUI : MonoBehaviour
     */
     mat.color = Color.HSVToRGB((110 - (magnitude * (110 / 11))) / 360, 1, 1);
     mat.color = new Color(mat.color.r, mat.color.g, mat.color.b, a: 0.8f);
-    print(110 - (magnitude * (110 / 11)));
     Vector3 directionToNextPoint = (new Vector3(-velocity.x, velocity.y, -velocity.z) * 100).normalized;
     //rocketArrow.transform.localScale = new Vector3(0.5f, 0.5f, velocity.magnitude * 6);
     arrow.rotation = Quaternion.LookRotation(directionToNextPoint, Vector3.up);

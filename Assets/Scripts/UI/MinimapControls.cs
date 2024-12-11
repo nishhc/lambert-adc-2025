@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 
 public class MinimapControls : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    private bool hover = false;
+    public bool hover { get; private set; } = false;
     [SerializeField] private Camera minimapCam;
     [SerializeField] private float zoomAmount;
 
