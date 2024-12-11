@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Unity.VisualScripting;
 
 public class CameraControl : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class CameraControl : MonoBehaviour
 
     private Vector3 anchorPoint;
     private Quaternion anchorRot;
+    private Vector3 prevMousePosition;
 
     private bool canMove = true;
 
@@ -36,49 +38,51 @@ public class CameraControl : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.H) && velShip != null)
         {
-            if (transform.parent == null) {
+            if (transform.parent == null)
+            {
                 transform.SetParent(velShip);
                 SnapUnsnap.SetText("Unsnap from ship");
                 transform.position = velShip.position;
             }
-            else {
+            else
+            {
                 transform.SetParent(null);
                 SnapUnsnap.SetText("Snap to ship");
             }
         }
 
-        if (canMove && Input.GetMouseButton(1))
+
+        Vector3 move = Vector3.zero;
+
+        float speed = movementSpeed * (Input.GetKey(KeyCode.LeftShift) ? sprintMultiplier : 1f) * Time.deltaTime * 9.1f;
+        move += Vector3.forward * Input.mouseScrollDelta.y * 5;
+
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
         {
-            Vector3 move = Vector3.zero;
-
-            float speed = movementSpeed * (Input.GetKey(KeyCode.LeftShift) ? sprintMultiplier : 1f) * Time.deltaTime * 9.1f;
-            if (Input.GetKey(KeyCode.W))
-            {
-                move += Vector3.forward * speed;
-            }
-            if (Input.GetKey(KeyCode.S))
-            {
-                move -= Vector3.forward * speed;
-            }
-            if (Input.GetKey(KeyCode.D))
-            {
-                move += Vector3.right * speed;
-            }
-            if (Input.GetKey(KeyCode.A))
-            {
-                move -= Vector3.right * speed;
-            }
-            if (Input.GetKey(KeyCode.E))
-            {
-                move += Vector3.up * speed;
-            }
-            if (Input.GetKey(KeyCode.Q))
-            {
-                move -= Vector3.up * speed;
-            }
-
-            transform.Translate(move);
+            move += Vector3.forward * speed;
         }
+        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+        {
+            move -= Vector3.forward * speed;
+        }
+        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+        {
+            move += Vector3.right * speed;
+        }
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+        {
+            move -= Vector3.right * speed;
+        }
+        if (Input.GetKey(KeyCode.E))
+        {
+            move += Vector3.up * speed;
+        }
+        if (Input.GetKey(KeyCode.Q))
+        {
+            move -= Vector3.up * speed;
+        }
+
+
 
         if (Input.GetMouseButtonDown(1))
         {
@@ -99,5 +103,22 @@ public class CameraControl : MonoBehaviour
             rot.eulerAngles += dif * cameraSensitivity;
             transform.rotation = rot;
         }
+        if (Input.GetMouseButtonDown(2))
+        {
+            prevMousePosition = Input.mousePosition;
+        }
+
+        if (Input.GetMouseButton(2))
+        {
+            Vector2 mov = (((prevMousePosition - Input.mousePosition))) * Time.deltaTime;
+            move += new Vector3(Mathf.Clamp(mov.x, -10, 10), Mathf.Clamp(mov.y, -10, 10), 0);
+            prevMousePosition = Input.mousePosition;
+
+        }
+
+
+        transform.Translate(move, Space.Self);
+
+
     }
 }

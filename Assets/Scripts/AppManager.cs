@@ -25,8 +25,8 @@ public class AppManager : MonoBehaviour
     [SerializeField] private GameObject _controls;
     [SerializeField] private GameObject _help;
     [SerializeField] private GameObject Earth;
-    [SerializeField]
-    private Image playbutton;
+    [SerializeField] private GameObject nonControlUI;
+    [SerializeField] private Image playbutton;
     [SerializeField] private Sprite[] playpause = new Sprite[2];
     // Update is called once per frame
     void Update()
@@ -48,8 +48,10 @@ public class AppManager : MonoBehaviour
             Earth.transform.rotation.eulerAngles.z
         ));
 
-
-
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            nonControlUI.SetActive(!nonControlUI.activeSelf);
+        }
 
         if (float.TryParse(_timeMultiplierText.text, out float result))
             timeMultiplier = result;
