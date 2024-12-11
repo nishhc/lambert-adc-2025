@@ -110,14 +110,14 @@ public class CameraControl : MonoBehaviour
 
         if (Input.GetMouseButton(2))
         {
-            Vector2 mov = (((prevMousePosition - Input.mousePosition))) * Time.deltaTime;
+            Vector2 mov = (((prevMousePosition - Input.mousePosition))) * Time.deltaTime * 5;
             move += new Vector3(Mathf.Clamp(mov.x, -10, 10), Mathf.Clamp(mov.y, -10, 10), 0);
             prevMousePosition = Input.mousePosition;
 
         }
 
 
-        transform.Translate(move, Space.Self);
+        transform.Translate(move);
 
 
     }
