@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class OffNomLineManager : MonoBehaviour
 {
-    [SerializeField] private CSV_Parser csvParser;
+    [SerializeField] public CSV_Parser csvParser;
+    [SerializeField] private GameObject mesh;
     [SerializeField] private LineRenderer lineRenderer;
-    [SerializeField] private float updateInterval = 0.1f;
     [SerializeField] private int skipRate = 5;
     [SerializeField] private Toggle offnomPath;
+    [SerializeField] GameObject antennaavailabilitytext;
+    public bool offnom { get; private set; } = false;
+
 
     private float lastUpdateTime;
     private int lastPositionCount;
@@ -24,15 +28,11 @@ public class OffNomLineManager : MonoBehaviour
 
     void Update()
     {
-        if (csvParser.OffNomPos.Count != lastPositionCount || Time.time - lastUpdateTime > updateInterval)
-        {
-            lastPositionCount = csvParser.OffNomPos.Count;
-            lastUpdateTime = Time.time;
+        antennaavailabilitytext.SetActive(offnom);
 
-            DrawLine();
-        }
-
+        offnom = offnomPath.isOn;
         lineRenderer.enabled = offnomPath.isOn;
+        mesh.SetActive(lineRenderer.enabled);
     }
 
     private void DrawLine()

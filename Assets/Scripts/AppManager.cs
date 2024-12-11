@@ -52,6 +52,7 @@ public class AppManager : MonoBehaviour
             coloredLine.SetActive(false);
         }
 
+
         simulationTime = Math.Clamp(simulationTime, 0, 778990.1988);
         // not super accurate but performant :D
         float angle = 0.7f;

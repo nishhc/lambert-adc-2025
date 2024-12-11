@@ -4,15 +4,17 @@ using UnityEngine;
 using TMPro;
 using System.Linq;
 using UnityEngine.UI;
-using Unity.VisualScripting;
 
 
 public class RocketMovement : MonoBehaviour
 {
   private List<Vector3> _csvPositions;
   private List<Vector3> _csvVelocities;
+  [SerializeField] public Transform offnomRocket;
+  [SerializeField] private OffNomLineManager offnomManager;
 
   private List<float> _csvTimes;
+  private List<float> _csvMinTimes;
   private AppManager _manager;
   private CSV_Parser _parser;
   [SerializeField] private Transform _mesh;
@@ -23,8 +25,8 @@ public class RocketMovement : MonoBehaviour
   [SerializeField][ReadOnlyField] private float _totalDistance = 0;
   public Vector3 _calculatedVelocity { get; private set; } = Vector3.zero;
   [SerializeField] private List<Transform> _satellites;
-  [SerializeField] private List<LineRenderer> _satelliteLines;
-  [SerializeField] private List<string> active;
+  [SerializeField] private List<AntennaDraw> _satelliteData;
+  private List<string> active;
   [SerializeField] private LayerMask _ignoreSatelliteLayers;
   [SerializeField] private TextMeshProUGUI _positionUI;
   [SerializeField] private TextMeshProUGUI _numberAvailable;
@@ -50,17 +52,23 @@ public class RocketMovement : MonoBehaviour
     _csvPositions = new List<Vector3>(_parser.Positions);
     _csvVelocities = new List<Vector3>(_parser.Velocities);
     _csvTimes = new List<float>(_parser.Times);
+    _csvMinTimes = new List<float>(_parser.offMinTimes);
 
     for (int i = 0; i < _csvTimes.Count; i++)
     {
       _csvTimes[i] *= 60; // manually edit the denomintaor of power to amount of objects using this system of interpolated positions
     }
 
+    for (int i = 0; i < _csvMinTimes.Count; i++)
+    {
+      _csvMinTimes[i] *= 60;
+    }
+
     transform.position = _csvPositions[0];
 
     foreach (Transform s in _satellites)
     {
-      _satelliteLines.Add(s.GetComponent<LineRenderer>());
+      _satelliteData.Add(s.GetComponent<AntennaDraw>());
     }
 
 
@@ -70,20 +78,35 @@ public class RocketMovement : MonoBehaviour
   private void FixedUpdate()
   {
 
-    _rocketSimTime = (float)_manager.simulationTime;
 
-    _positionUI.text = $"{transform.position.x * 10} km\n{transform.position.z * 10} km\n{transform.position.y * 10} km";
+    _rocketSimTime = (float)_manager.simulationTime;
+    if (_rocketSimTime < 0)
+    {
+      _rocketSimTime = 0;
+    }
+    int offnomIndex = FindOffMinuteBasedSegment(_rocketSimTime);
+    print(offnomManager.csvParser.OffNomPos[offnomIndex].x);
+    float offNomSegmentProgress = (_rocketSimTime - _csvMinTimes[offnomIndex]) / (_csvMinTimes[offnomIndex + 1] - _csvMinTimes[offnomIndex]);
+    Vector3 offNomInterpolatedPosition = Vector3.Lerp(offnomManager.csvParser.OffNomPos[offnomIndex], offnomManager.csvParser.OffNomPos[offnomIndex + 1], offNomSegmentProgress);
+    offnomRocket.position = offNomInterpolatedPosition;
+    Vector3 offNextPoint = offnomManager.csvParser.OffNomPos[offnomIndex + (offnomIndex < offnomManager.csvParser.OffNomPos.Count - 3 ? 2 : 1)];
+    Vector3 offNomdirectionToNextPoint = offnomIndex < offnomManager.csvParser.OffNomPos.Count - 3 ? (offNextPoint - offnomRocket.position).normalized : _csvVelocities[_csvVelocities.Count - 2].normalized;
+    offnomRocket.rotation = Quaternion.LookRotation(_csvMinTimes[offnomIndex] / 60 < 204f ? (offNextPoint - offnomRocket.position).normalized : offNomdirectionToNextPoint, Vector3.up); //tip of rocket facing forward
+
+
+
+    _positionUI.text = $"{transform.position.x * (1 / _parser.INITIAL_SCALE)} km\n{transform.position.z * (1 / _parser.INITIAL_SCALE)} km\n{transform.position.y * (1 / _parser.INITIAL_SCALE)} km";
 
     int segmentIndex = FindPreciseSegment(_rocketSimTime);
     float segmentProgress = (_rocketSimTime - _csvTimes[segmentIndex]) / (_csvTimes[segmentIndex + 1] - _csvTimes[segmentIndex]);
     Vector3 interpolatedPosition = Vector3.Lerp(_csvPositions[segmentIndex], _csvPositions[segmentIndex + 1], segmentProgress);
     transform.position = interpolatedPosition;
 
-    Vector3 nextPoint = _csvPositions[segmentIndex + 1];
+    Vector3 nextPoint = _csvPositions[segmentIndex + (segmentIndex < _csvPositions.Count - 3 ? 2 : 1)];
     int budgetSegmentIndex = FindMinuteBasedSegment(_rocketSimTime / 60);
 
-    Vector3 directionToNextPoint = _csvVelocities[budgetSegmentIndex].normalized;
-    _mesh.rotation = Quaternion.LookRotation(_csvTimes[segmentIndex] < 204f ? (nextPoint - transform.position) : (nextPoint - transform.position), Vector3.up); //tip of rocket facing forward
+    Vector3 directionToNextPoint = segmentIndex < _csvPositions.Count - 3 ? (nextPoint - transform.position).normalized : _csvVelocities[_csvVelocities.Count - 2].normalized;
+    _mesh.rotation = Quaternion.LookRotation(_csvTimes[segmentIndex] / 60 < 204f ? (nextPoint - transform.position).normalized : directionToNextPoint, Vector3.up); //tip of rocket facing forward
 
     _totalDistance = 0;
     for (int i = 0; i < segmentIndex; i++)
@@ -94,18 +117,32 @@ public class RocketMovement : MonoBehaviour
     float segmentDistance = Vector3.Distance(_csvPositions[segmentIndex], _csvPositions[segmentIndex + 1]);
     //Debug.Log(segmentDistance);
     _totalDistance += segmentDistance * segmentProgress;
-
-    _totalDist.text = $"{_totalDistance * (1 / _parser.INITIAL_SCALE)} km";
+    _totalDistance *= (1 / _parser.INITIAL_SCALE);
+    if (_totalDistance > 1111286.9f)
+    {
+      _totalDistance = 1111286.9f;
+    }
+    _totalDist.text = $"{_totalDistance} km";
 
     //    print(_parser.minTimes[budgetSegmentIndex]);
     //print($"{_parser.WpsaStates[budgetSegmentIndex]} {_parser.DS54States[budgetSegmentIndex]} {_parser.DS24States[budgetSegmentIndex]} {_parser.DS34States[budgetSegmentIndex]}");
-    Dictionary<string, double> rangeSatelliteMatches = new Dictionary<string, double>
+    print(offnomManager.offnom);
+    Dictionary<string, double> rangeSatelliteMatches = !offnomManager.offnom ? new Dictionary<string, double>
     {
       //inssheet 0 means off 1 on, so set range t -1 if off in sheet
       {"WPSA", _parser.WpsaStates[budgetSegmentIndex] == 1 ? LinkBudget(12, _parser.WpsaRanges[budgetSegmentIndex]) : -1},
       {"DS54", _parser.DS54States[budgetSegmentIndex] == 1 ? LinkBudget(34, _parser.DS54Ranges[budgetSegmentIndex]) : -1},
       {"DS24", _parser.DS24States[budgetSegmentIndex] == 1 ? LinkBudget(34, _parser.DS24Ranges[budgetSegmentIndex]) : -1},
       {"DS34", _parser.DS34States[budgetSegmentIndex] == 1 ? LinkBudget(34, _parser.DS34Ranges[budgetSegmentIndex]) : -1},
+    } : new Dictionary<string, double>
+    {
+      //inssheet 0 means off 1 on, so set range t -1 if off in sheet
+
+      // EACH OF THESE INDICES IN SATTELITE DATA IS HARDCODED, I SHOULD FIND BETTER WAY TO DO BUT WORKS FOR NOW
+      {"WPSA", _satelliteData[3].valid ? LinkBudget(12,  _satelliteData[3].dist) : -1},
+      {"DS54", _satelliteData[2].valid ? LinkBudget(34,  _satelliteData[2].dist) : -1},
+      {"DS24", _satelliteData[0].valid ? LinkBudget(34,  _satelliteData[3].dist) : -1},
+      {"DS34", _satelliteData[1].valid ? LinkBudget(34,  _satelliteData[1].dist) : -1},
     };
 
     IOrderedEnumerable<KeyValuePair<string, double>> sorted = rangeSatelliteMatches.OrderBy(kvp => kvp.Value);
@@ -131,20 +168,32 @@ public class RocketMovement : MonoBehaviour
     int index = 0;
     foreach (KeyValuePair<string, double> kvp in reversed)
     {
+
       if (kvp.Value != -1)
       {
         numAvail += 1;
         // allLinkBudget += $"{kvp.Key}: {Math.Round(kvp.Value, 4)} kbps\n"; // old link budget text
         _antennaTexts[index].text = $"{kvp.Key}: {Math.Round(kvp.Value, 4)} kbps";
         _antennaTexts[index].color = antennaAvailability.isOn ? _antennaColors[index] : Color.white;
+        /*
         for (int i = 0; i < _satelliteLines.Count; i++)
         {
-          if (_satelliteLines[i].gameObject.name == kvp.Key)
+          //print(_satelliteLines[i].gameObject.name + " " + kvp.Key + " " + _satelliteLines[i].gameObject.name.Equals(kvp.Key));
+          if (_satelliteLines[i].gameObject.name.Equals(kvp.Key))
           {
+            _satelliteLines[i].enabled = true;
             _satelliteLines[i].startColor = _antennaColors[index];
             _satelliteLines[i].endColor = _antennaColors[index];
+            _satelliteLines[i].SetPosition(0, _satelliteLines[i].transform.position);
+            _satelliteLines[i].SetPosition(1, transform.position);
+
+          }
+          else
+          {
+
           }
         }
+        */
       }
       else { _antennaTexts[index].text = $"{kvp.Key}: OFF\n"; _antennaTexts[index].color = antennaAvailability.isOn ? _antennaColors[3] : Color.white; }
       index++;
@@ -240,18 +289,24 @@ public class RocketMovement : MonoBehaviour
     serviceModule.SetActive(!serviceOff);
 
     //allLinkBudget = $"Antennas Available: {numAvail}\n" + allLinkBudget;
-    //_numberAvailable.text = $"Antennas Available: {numAvail}";
+    _numberAvailable.text = $"Antennas Available: {numAvail}";
 
 
   }
 
   private int FindPreciseSegment(float time)
   {
-    for (int i = 0; i < _csvTimes.Count - 1; i++)
+    if (time == 0)
+    {
+      return 0;
+    }
+
+    for (int i = 0; i < _csvTimes.Count - 2; i++)
     {
       if (time >= _csvTimes[i] && time <= _csvTimes[i + 1])
         return i;
     }
+
     return _csvTimes.Count - 2;
   }
 
@@ -263,6 +318,21 @@ public class RocketMovement : MonoBehaviour
         return i;
     }
     return _parser.minTimes.Count - 2;
+  }
+
+  private int FindOffMinuteBasedSegment(float time)
+  {
+    if (time == 0)
+    {
+      return 0;
+    }
+
+    for (int i = 0; i < _csvMinTimes.Count - 1; i++)
+    {
+      if (time >= _csvMinTimes[i] && time <= _csvMinTimes[i + 1])
+        return i;
+    }
+    return _csvMinTimes.Count - 2;
   }
 
   private void OnDrawGizmos()

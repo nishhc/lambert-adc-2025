@@ -9,6 +9,7 @@ public class CameraControl : MonoBehaviour
 {
     [SerializeField] float movementSpeed;
     [SerializeField] float sprintMultiplier;
+    [SerializeField] float scrollSpeed;
     [SerializeField] float cameraSensitivity;
 
     [SerializeField] private Camera cam;
@@ -78,7 +79,7 @@ public class CameraControl : MonoBehaviour
         Vector3 move = Vector3.zero;
 
         float speed = movementSpeed * (Input.GetKey(KeyCode.LeftShift) ? sprintMultiplier : 1f) * Time.deltaTime * 9.1f * p;
-        move += Vector3.forward * (!minimap.hover ? Input.mouseScrollDelta.y : 0) * 5;
+        move += Vector3.forward * (!minimap.hover ? Input.mouseScrollDelta.y : 0) * scrollSpeed;
 
         if (Input.GetKey(KeyCode.W) /*|| Input.GetKey(KeyCode.UpArrow)*/)
         {
@@ -133,7 +134,7 @@ public class CameraControl : MonoBehaviour
 
         if (Input.GetMouseButton(2))
         {
-            Vector2 mov = (((prevMousePosition - Input.mousePosition))) * Time.deltaTime * 5 * p;
+            Vector2 mov = (((prevMousePosition - Input.mousePosition))) * Time.deltaTime * 0.75f * p;
             move += new Vector3(Mathf.Clamp(mov.x, -10, 10), Mathf.Clamp(mov.y, -10, 10), 0);
             prevMousePosition = Input.mousePosition;
 
