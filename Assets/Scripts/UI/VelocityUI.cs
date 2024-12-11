@@ -47,7 +47,7 @@ public class VelocityUI : MonoBehaviour
   {
     time = (float)manager.simulationTime;
     int segmentIndex = FindSegment(time / 60);
-    Debug.Log(pathVelocities[segmentIndex] + $" {segmentIndex}");
+//    Debug.Log(pathVelocities[segmentIndex] + $" {segmentIndex}");
     velocity = pathVelocities[segmentIndex] * (1f / _parser.INITIAL_SCALE);
     vel.text = $"{Math.Round(velocity.x, 2)} km/s\n{Math.Round(velocity.z, 2)} km/s\n{Math.Round(velocity.y, 2)} km / s";
     float magnitude = velocity.magnitude;//0.9f + (velocity.magnitude / 11 * 0.2f);
