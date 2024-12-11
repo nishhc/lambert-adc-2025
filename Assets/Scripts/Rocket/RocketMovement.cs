@@ -4,11 +4,6 @@ using UnityEngine;
 using TMPro;
 using System.Linq;
 using UnityEngine.UI;
-using Unity.VisualScripting;
-using UnityEngine.AI;
-using TreeEditor;
-using UnityEditor.Rendering.PostProcessing;
-using Palmmedia.ReportGenerator.Core;
 
 
 public class RocketMovement : MonoBehaviour
@@ -204,7 +199,7 @@ public class RocketMovement : MonoBehaviour
     if (rocket_mins > 196.64947)
     {
       icpsBreak = true;
-      print("ICPS Detach abd burn");
+      print("ICPS Detach and burn");
     }
     if (rocket_mins > 284.6428)
     {

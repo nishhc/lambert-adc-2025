@@ -15,6 +15,7 @@ public class CSV_Parser : MonoBehaviour
     public List<float> Times { get; } = new List<float>();
 
     public List<Vector3> MoonPositions { get; } = new List<Vector3>();
+    public List<Vector3> OffNomPos { get; } = new List<Vector3>();
     public List<float> minTimes { get; } = new List<float>();
     public List<int> WpsaStates { get; } = new List<int>();
     public List<float> WpsaRanges { get; } = new List<float>();
@@ -44,9 +45,13 @@ public class CSV_Parser : MonoBehaviour
 
             if (float.TryParse(current[Array.IndexOf(bonusHeaders, "MOON Rx(km)[J2000-EARTH]")], out float mpx) &&
                 float.TryParse(current[Array.IndexOf(bonusHeaders, "MOON Ry(km)[J2000-EARTH]")], out float mpy) &&
-                float.TryParse(current[Array.IndexOf(bonusHeaders, "MOON Rz(km)[J2000-EARTH]")], out float mpz))
+                float.TryParse(current[Array.IndexOf(bonusHeaders, "MOON Rz(km)[J2000-EARTH]")], out float mpz) &&
+                float.TryParse(current[1], out float ppx) &&
+                float.TryParse(current[2], out float ppy) &&
+                float.TryParse(current[3], out float ppz))
             {
                 MoonPositions.Add(INITIAL_SCALE * new Vector3(mpx, mpz, mpy));
+                OffNomPos.Add(INITIAL_SCALE * new Vector3(ppx, ppz, ppy));
             }
             // caused due to an error being thrown somewhere
 

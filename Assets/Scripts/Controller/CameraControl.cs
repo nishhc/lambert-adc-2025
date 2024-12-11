@@ -13,8 +13,7 @@ public class CameraControl : MonoBehaviour
 
     [SerializeField] private Camera cam;
     [SerializeField] private Transform velShip;
-    [SerializeField] private TMP_Text ToggleMovmement;
-    [SerializeField] private TMP_Text SnapUnsnap;
+
     [SerializeField] private MinimapControls minimap;
 
     private Vector3 anchorPoint;
@@ -25,37 +24,32 @@ public class CameraControl : MonoBehaviour
 
     void Update()
     {
+        float p = 1;
         if (Input.GetKeyDown(KeyCode.T))
         {
             canMove = !canMove;
             Debug.Log($"Can Move: {canMove}");
-            if (canMove)
-                ToggleMovmement.SetText("Disable movement");
-            else
-            {
-                ToggleMovmement.SetText("Enable movement");
-            }
         }
 
+        if (!canMove)
+            p = 0;
         if (Input.GetKeyDown(KeyCode.H) && velShip != null)
         {
             if (transform.parent == null)
             {
                 transform.SetParent(velShip);
-                SnapUnsnap.SetText("Unsnap from ship");
                 transform.position = velShip.position;
             }
             else
             {
                 transform.SetParent(null);
-                SnapUnsnap.SetText("Snap to ship");
             }
         }
 
 
         Vector3 move = Vector3.zero;
 
-        float speed = movementSpeed * (Input.GetKey(KeyCode.LeftShift) ? sprintMultiplier : 1f) * Time.deltaTime * 9.1f;
+        float speed = movementSpeed * (Input.GetKey(KeyCode.LeftShift) ? sprintMultiplier : 1f) * Time.deltaTime * 9.1f * p;
         move += Vector3.forward * (!minimap.hover ? Input.mouseScrollDelta.y : 0) * 5;
 
         if (Input.GetKey(KeyCode.W) /*|| Input.GetKey(KeyCode.UpArrow)*/)
