@@ -28,9 +28,30 @@ public class AppManager : MonoBehaviour
     [SerializeField] private GameObject nonControlUI;
     [SerializeField] private Image playbutton;
     [SerializeField] private Sprite[] playpause = new Sprite[2];
+
+    [SerializeField] private Toggle pathColor;
+    [SerializeField] private GameObject coloredLine;
+    [SerializeField] private GameObject basicLine;
+    public bool linkBudget = true;
+    [SerializeField] private Image buttonImg;
+    [SerializeField] private Sprite toggledOn;
+    [SerializeField] private Sprite toggledOff;
+
     // Update is called once per frame
     void Update()
     {
+
+        if (pathColor.isOn)
+        {
+            coloredLine.SetActive(true);
+            basicLine.SetActive(false);
+        }
+        else
+        {
+            basicLine.SetActive(true);
+            coloredLine.SetActive(false);
+        }
+
         simulationTime = Math.Clamp(simulationTime, 0, 778990.1988);
         // not super accurate but performant :D
         float angle = 0.7f;
@@ -73,9 +94,16 @@ public class AppManager : MonoBehaviour
 
         dys.text = days.ToString();
         justMins.text = $"Elapsed Time: {Math.Round(simulationTime / 60, 2)} mins";
-        hrs.text = hours <= 9 ? $"0{hours.ToString()}" : hours.ToString();
-        mins.text = minutes <= 9 ? $"0{minutes.ToString()}" : minutes.ToString();
-        secs.text = seconds <= 9 ? $"0{seconds.ToString()}" : seconds.ToString();
+        hrs.text = hours <= 9 ? $"0{hours}" : hours.ToString();
+        mins.text = minutes <= 9 ? $"0{minutes}" : minutes.ToString();
+        secs.text = seconds <= 9 ? $"0{seconds}" : seconds.ToString();
+
+        if (linkBudget)
+        {
+            buttonImg.sprite = toggledOff;
+        }
+        else
+            buttonImg.sprite = toggledOn;
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -123,6 +151,11 @@ public class AppManager : MonoBehaviour
 
     }
 
+    public void toggleLinkBudget()
+    {
+        linkBudget = !linkBudget;
+    }
+
     public void IsDragging()
     {
         tempPause = true;
@@ -166,7 +199,5 @@ public class AppManager : MonoBehaviour
         print("Keys");
         _colorkey.SetActive(!_colorkey.activeSelf);
     }
-
-
 
 }

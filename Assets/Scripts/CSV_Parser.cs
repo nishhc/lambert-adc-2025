@@ -7,6 +7,8 @@ public class CSV_Parser : MonoBehaviour
     [SerializeField] private TextAsset csvFile;
     [SerializeField] private TextAsset bonusFile;
     [SerializeField] private TextAsset linkBudgetFile;
+    [SerializeField] private TextAsset mlPath;
+
 
     public List<Vector3> Positions { get; } = new List<Vector3>();
     public List<Vector3> Velocities = new List<Vector3>();
@@ -22,6 +24,7 @@ public class CSV_Parser : MonoBehaviour
     public List<float> DS24Ranges { get; } = new List<float>();
     public List<int> DS34States { get; } = new List<int>();
     public List<float> DS34Ranges { get; } = new List<float>();
+    public List<string> ACTIVE { get; } = new List<string>();
 
 
     [SerializeField] private GameObject _artemisPointer;
@@ -51,23 +54,21 @@ public class CSV_Parser : MonoBehaviour
 
         }
 
-        string[] mainLines = csvFile.text.Split('\n');
-        string[] mainHeaders = mainLines[0].Split(',');
-        for (int i = 1; i < mainLines.Length - 1; i++)
+        string[] smoothLines = mlPath.text.Split('\n');
+        string[] smoothHeaders = smoothLines[0].Split(',');
+        for (int i = 1; i < smoothLines.Length - 1; i++)
         {
 
 
-            string[] current = mainLines[i].Split(',');
-            if (float.TryParse(current[Array.IndexOf(mainHeaders, "Ppx")], out float ppx) &&
-                float.TryParse(current[Array.IndexOf(mainHeaders, "Ppy")], out float ppy) &&
-                float.TryParse(current[Array.IndexOf(mainHeaders, "Ppz")], out float ppz) &&
-                float.TryParse(current[Array.IndexOf(mainHeaders, "Pvx")], out float pvx) &&
-                float.TryParse(current[Array.IndexOf(mainHeaders, "Pvy")], out float pvy) &&
-                float.TryParse(current[Array.IndexOf(mainHeaders, "Pvz")], out float pvz))
+            string[] current = smoothLines[i].Split(',');
+            if (float.TryParse(current[1], out float ppx) &&
+                float.TryParse(current[2], out float ppy) &&
+                float.TryParse(current[3], out float ppz))
+
             {
-                Times.Add(float.Parse(current[Array.IndexOf(mainHeaders, "PRECISE MISSION TIME (min)")]));
+                Times.Add(float.Parse(current[Array.IndexOf(smoothHeaders, "PRECISE MISSION TIME (min)")]));
                 Positions.Add(INITIAL_SCALE * new Vector3(ppx, ppz, ppy));
-                Velocities.Add(INITIAL_SCALE * new Vector3(pvx, pvz, pvy));
+
 
             }
 
@@ -77,12 +78,15 @@ public class CSV_Parser : MonoBehaviour
 
         }
 
+        string[] mainLines = csvFile.text.Split('\n');
+        string[] mainHeaders = mainLines[0].Split(',');
         string[] linkbudgetLines = linkBudgetFile.text.Split('\n');
         string[] linkBudgetHeaders = linkbudgetLines[0].Split(',');
         for (int i = 1; i < linkbudgetLines.Length - 1; i++)
         {
 
             string[] current = linkbudgetLines[i].Split(',');
+            string[] vel = mainLines[i].Split(',');
             if (float.TryParse(current[Array.IndexOf(linkBudgetHeaders, "MISSION ELAPSED TIME (min)")], out float missionElapsedTime) &&
                 int.TryParse(current[Array.IndexOf(linkBudgetHeaders, "WPSA")], out int wpsaState) &&
                 float.TryParse(current[Array.IndexOf(linkBudgetHeaders, "WPSA Range")], out float wpsaRange) &&
@@ -91,8 +95,12 @@ public class CSV_Parser : MonoBehaviour
                 int.TryParse(current[Array.IndexOf(linkBudgetHeaders, "DS24")], out int ds24State) &&
                 float.TryParse(current[Array.IndexOf(linkBudgetHeaders, "Range DS24")], out float ds24Range) &&
                 int.TryParse(current[Array.IndexOf(linkBudgetHeaders, "DS34")], out int ds34State) &&
-                float.TryParse(current[8], out float ds34Range)) // for some reason search Range DS34 doesn't work I couldnt figure out why so i just put hardcoded value of 8 
+                float.TryParse(current[8], out float ds34Range) // for some reason search Range DS34 doesn't work I couldnt figure out why so i just put hardcoded value of 8 
+                && float.TryParse(vel[4], out float pvx) &&
+                float.TryParse(vel[5], out float pvy) &&
+                float.TryParse(vel[6], out float pvz))
             {
+                ACTIVE.Add(current[9]);
                 minTimes.Add(missionElapsedTime);
                 WpsaStates.Add(wpsaState);
                 WpsaRanges.Add(wpsaRange);
@@ -102,6 +110,7 @@ public class CSV_Parser : MonoBehaviour
                 DS24Ranges.Add(ds24Range);
                 DS34States.Add(ds34State);
                 DS34Ranges.Add(ds34Range);
+                Velocities.Add(INITIAL_SCALE * new Vector3(pvx, pvz, pvy));
             }
         }
 

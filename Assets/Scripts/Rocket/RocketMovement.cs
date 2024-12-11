@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System.Linq;
+using UnityEngine.UI;
 using Unity.VisualScripting;
 using UnityEngine.AI;
 using TreeEditor;
 using UnityEditor.Rendering.PostProcessing;
 using Palmmedia.ReportGenerator.Core;
+
 
 public class RocketMovement : MonoBehaviour
 {
@@ -25,6 +27,7 @@ public class RocketMovement : MonoBehaviour
   [SerializeField][ReadOnlyField] private float _totalDistance = 0;
   public Vector3 _calculatedVelocity { get; private set; } = Vector3.zero;
   [SerializeField] private List<Transform> _satellites;
+  [SerializeField] private List<string> active;
   [SerializeField] private LayerMask _ignoreSatelliteLayers;
   [SerializeField] private TextMeshProUGUI _positionUI;
   [SerializeField] private TextMeshProUGUI _numberAvailable;
@@ -33,6 +36,8 @@ public class RocketMovement : MonoBehaviour
 
   [SerializeField] private GameObject ICPS;
   [SerializeField] private GameObject serviceModule;
+  [SerializeField] private Toggle antennaAvailability;
+
 
 
   private void Awake()
@@ -43,7 +48,7 @@ public class RocketMovement : MonoBehaviour
 
   private void Start()
   {
-
+    active = new List<string>(_parser.ACTIVE);
     _csvPositions = new List<Vector3>(_parser.Positions);
     _csvVelocities = new List<Vector3>(_parser.Velocities);
     _csvTimes = new List<float>(_parser.Times);
@@ -87,9 +92,10 @@ public class RocketMovement : MonoBehaviour
     transform.position = interpolatedPosition;
 
     Vector3 nextPoint = _csvPositions[segmentIndex + 1];
+    int budgetSegmentIndex = FindMinuteBasedSegment(_rocketSimTime / 60);
 
-    Vector3 directionToNextPoint = _csvVelocities[segmentIndex].normalized;
-    _mesh.rotation = Quaternion.LookRotation(_csvTimes[segmentIndex] > 8.23f ? directionToNextPoint : (nextPoint - transform.position), Vector3.up); //tip of rocket facing forward
+    Vector3 directionToNextPoint = _csvVelocities[budgetSegmentIndex].normalized;
+    _mesh.rotation = Quaternion.LookRotation(_csvTimes[segmentIndex] < 204f ? directionToNextPoint : (nextPoint - transform.position), Vector3.up); //tip of rocket facing forward
 
     _totalDistance = 0;
     for (int i = 0; i < segmentIndex; i++)
@@ -103,7 +109,6 @@ public class RocketMovement : MonoBehaviour
 
     _totalDist.text = $"{_totalDistance * (1 / _parser.INITIAL_SCALE)} km";
 
-    int budgetSegmentIndex = FindMinuteBasedSegment(_rocketSimTime / 60);
     //    print(_parser.minTimes[budgetSegmentIndex]);
     //print($"{_parser.WpsaStates[budgetSegmentIndex]} {_parser.DS54States[budgetSegmentIndex]} {_parser.DS24States[budgetSegmentIndex]} {_parser.DS34States[budgetSegmentIndex]}");
     Dictionary<string, double> rangeSatelliteMatches = new Dictionary<string, double>
@@ -117,6 +122,22 @@ public class RocketMovement : MonoBehaviour
 
     IOrderedEnumerable<KeyValuePair<string, double>> sorted = rangeSatelliteMatches.OrderBy(kvp => kvp.Value);
     IEnumerable<KeyValuePair<string, double>> reversed = sorted.Reverse();
+    if (!_manager.linkBudget)
+    {
+      Dictionary<string, double> newSat = new Dictionary<string, double>();
+      if (active[budgetSegmentIndex] != "NONE")
+        newSat.Add(active[budgetSegmentIndex], rangeSatelliteMatches[active[budgetSegmentIndex]]);
+      foreach (KeyValuePair<string, double> kvp in reversed)
+      {
+        if (kvp.Key != active[budgetSegmentIndex])
+        {
+          newSat.Add(kvp.Key, kvp.Value);
+        }
+      }
+      reversed = newSat;
+
+
+    }
     //string allLinkBudget = "";
     int numAvail = 0;
     int index = 0;
@@ -127,9 +148,9 @@ public class RocketMovement : MonoBehaviour
         numAvail += 1;
         // allLinkBudget += $"{kvp.Key}: {Math.Round(kvp.Value, 4)} kbps\n"; // old link budget text
         _antennaTexts[index].text = $"{kvp.Key}: {Math.Round(kvp.Value, 4)} kbps";
-        _antennaTexts[index].color = _antennaColors[index];
+        _antennaTexts[index].color = antennaAvailability.isOn ? _antennaColors[index] : Color.white;
       }
-      else { _antennaTexts[index].text = $"{kvp.Key}: OFF\n"; _antennaTexts[index].color = _antennaColors[3]; }
+      else { _antennaTexts[index].text = $"{kvp.Key}: OFF\n"; _antennaTexts[index].color = antennaAvailability.isOn ? _antennaColors[3] : Color.white; }
       index++;
 
     }
