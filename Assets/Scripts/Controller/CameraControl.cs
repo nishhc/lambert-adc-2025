@@ -19,11 +19,47 @@ public class CameraControl : MonoBehaviour
     private Vector3 anchorPoint;
     private Quaternion anchorRot;
     private Vector3 prevMousePosition;
+    [SerializeField] private TextMeshProUGUI povText;
 
     private bool canMove = true;
 
+    void Start()
+    {
+        povText.text = "TRACKING ORION";
+
+    }
+
     void Update()
     {
+
+        povText.text = "";
+
+        if (transform.parent != null)
+        {
+            povText.text = "TRACKING ORION";
+        }
+        else
+        {
+            povText.text = "FREE";
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.H) && velShip != null)
+        {
+            if (transform.parent == null)
+            {
+                transform.SetParent(velShip);
+                transform.position = velShip.position;
+                povText.text = "TRACKING ORION";
+
+            }
+            else
+            {
+                transform.SetParent(null);
+                povText.text = "FREE";
+
+            }
+        }
         float p = 1;
         if (Input.GetKeyDown(KeyCode.T))
         {
@@ -32,19 +68,11 @@ public class CameraControl : MonoBehaviour
         }
 
         if (!canMove)
-            p = 0;
-        if (Input.GetKeyDown(KeyCode.H) && velShip != null)
         {
-            if (transform.parent == null)
-            {
-                transform.SetParent(velShip);
-                transform.position = velShip.position;
-            }
-            else
-            {
-                transform.SetParent(null);
-            }
+            povText.text += (" (Locked)");
+            p = 0;
         }
+
 
 
         Vector3 move = Vector3.zero;
@@ -105,7 +133,7 @@ public class CameraControl : MonoBehaviour
 
         if (Input.GetMouseButton(2))
         {
-            Vector2 mov = (((prevMousePosition - Input.mousePosition))) * Time.deltaTime * 5;
+            Vector2 mov = (((prevMousePosition - Input.mousePosition))) * Time.deltaTime * 5 * p;
             move += new Vector3(Mathf.Clamp(mov.x, -10, 10), Mathf.Clamp(mov.y, -10, 10), 0);
             prevMousePosition = Input.mousePosition;
 

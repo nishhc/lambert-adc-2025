@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using System.Linq;
 using UnityEngine.UI;
+using Unity.VisualScripting;
 
 
 public class RocketMovement : MonoBehaviour
@@ -22,6 +23,7 @@ public class RocketMovement : MonoBehaviour
   [SerializeField][ReadOnlyField] private float _totalDistance = 0;
   public Vector3 _calculatedVelocity { get; private set; } = Vector3.zero;
   [SerializeField] private List<Transform> _satellites;
+  [SerializeField] private List<LineRenderer> _satelliteLines;
   [SerializeField] private List<string> active;
   [SerializeField] private LayerMask _ignoreSatelliteLayers;
   [SerializeField] private TextMeshProUGUI _positionUI;
@@ -32,6 +34,7 @@ public class RocketMovement : MonoBehaviour
   [SerializeField] private GameObject ICPS;
   [SerializeField] private GameObject serviceModule;
   [SerializeField] private Toggle antennaAvailability;
+  [SerializeField] private TextMeshProUGUI firingText;
 
 
 
@@ -55,6 +58,11 @@ public class RocketMovement : MonoBehaviour
 
     transform.position = _csvPositions[0];
 
+    foreach (Transform s in _satellites)
+    {
+      _satelliteLines.Add(s.GetComponent<LineRenderer>());
+    }
+
 
 
   }
@@ -62,21 +70,6 @@ public class RocketMovement : MonoBehaviour
   private void FixedUpdate()
   {
 
-
-    // failed raycasting work on later im too tired for this rn
-    /*
-    foreach (Transform satellite in _satellites)
-    {
-      RaycastHit[] hits = Physics.RaycastAll(_mesh.position, satellite.position - transform.position, (satellite.position - transform.position).magnitude + 30, _ignoreSatelliteLayers);
-      string names = "";
-      foreach (RaycastHit hit in hits)
-      {
-        names += hit.collider.name + " ";
-      }
-      Debug.Log(satellite.name + " " + hits.Length + " " + names);
-
-    }
-    */
     _rocketSimTime = (float)_manager.simulationTime;
 
     _positionUI.text = $"{transform.position.x * 10} km\n{transform.position.z * 10} km\n{transform.position.y * 10} km";
@@ -90,7 +83,7 @@ public class RocketMovement : MonoBehaviour
     int budgetSegmentIndex = FindMinuteBasedSegment(_rocketSimTime / 60);
 
     Vector3 directionToNextPoint = _csvVelocities[budgetSegmentIndex].normalized;
-    _mesh.rotation = Quaternion.LookRotation(_csvTimes[segmentIndex] < 204f ? directionToNextPoint : (nextPoint - transform.position), Vector3.up); //tip of rocket facing forward
+    _mesh.rotation = Quaternion.LookRotation(_csvTimes[segmentIndex] < 204f ? (nextPoint - transform.position) : (nextPoint - transform.position), Vector3.up); //tip of rocket facing forward
 
     _totalDistance = 0;
     for (int i = 0; i < segmentIndex; i++)
@@ -144,6 +137,14 @@ public class RocketMovement : MonoBehaviour
         // allLinkBudget += $"{kvp.Key}: {Math.Round(kvp.Value, 4)} kbps\n"; // old link budget text
         _antennaTexts[index].text = $"{kvp.Key}: {Math.Round(kvp.Value, 4)} kbps";
         _antennaTexts[index].color = antennaAvailability.isOn ? _antennaColors[index] : Color.white;
+        for (int i = 0; i < _satelliteLines.Count; i++)
+        {
+          if (_satelliteLines[i].gameObject.name == kvp.Key)
+          {
+            _satelliteLines[i].startColor = _antennaColors[index];
+            _satelliteLines[i].endColor = _antennaColors[index];
+          }
+        }
       }
       else { _antennaTexts[index].text = $"{kvp.Key}: OFF\n"; _antennaTexts[index].color = antennaAvailability.isOn ? _antennaColors[3] : Color.white; }
       index++;
@@ -151,31 +152,43 @@ public class RocketMovement : MonoBehaviour
     }
 
 
+    firingText.text = "";
     double rocket_mins = _rocketSimTime / 60;
     // in progress 
     if (rocket_mins > 47.639 && rocket_mins < 48.639)
     {
       print("Perigee Raise Manuevar");
+      firingText.text = "BURN ICPS";
+
     }
     else if (rocket_mins > 99.639 && rocket_mins < 121.0944)
     {
       print("Apogee Raise Burn");
+      firingText.text = "BURN ICPS";
+
     }
     else if (rocket_mins > 196.09447 && rocket_mins < 196.64947)
     {
       print("ICPS Detach abd burn");
+      firingText.text = "ICPS SEPERATING (SECOND STAGE)";
     }
     else if (rocket_mins > 283.64947 && rocket_mins < 284.6428)
     {
       print("Seperation Burn");
+      firingText.text = "BURN ICPS";
+
     }
     else if (rocket_mins > 792.44937 && rocket_mins < 795.28272)
     {
       print("Perigree Raise Burn");
+      firingText.text = "BURN SERVICE MODULE";
+
     }
     else if (rocket_mins > 1486.6203 && rocket_mins < 1492.2767)
     {
       print("Escape Orbit");
+      firingText.text = " 196 SERVICE MODULE";
+
     }
 
     bool perigeeMDone = false;
@@ -195,10 +208,12 @@ public class RocketMovement : MonoBehaviour
     {
       apogee = true;
       print("Apogee Raise Burn Done");
+
     }
     if (rocket_mins > 196.64947)
     {
       icpsBreak = true;
+
       print("ICPS Detach and burn");
     }
     if (rocket_mins > 284.6428)
