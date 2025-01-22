@@ -141,7 +141,7 @@ public class RocketMovement : MonoBehaviour
       // EACH OF THESE INDICES IN SATTELITE DATA IS HARDCODED, I SHOULD FIND BETTER WAY TO DO BUT WORKS FOR NOW
       {"WPSA", _satelliteData[3].valid ? LinkBudget(12,  _satelliteData[3].dist) : -1},
       {"DS54", _satelliteData[2].valid ? LinkBudget(34,  _satelliteData[2].dist) : -1},
-      {"DS24", _satelliteData[0].valid ? LinkBudget(34,  _satelliteData[3].dist) : -1},
+      {"DS24", _satelliteData[0].valid ? LinkBudget(34,  _satelliteData[0].dist) : -1},
       {"DS34", _satelliteData[1].valid ? LinkBudget(34,  _satelliteData[1].dist) : -1},
     };
 
