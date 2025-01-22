@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 using System.Linq;
 using Unity.VisualScripting;
 
@@ -20,6 +20,9 @@ public class LineManager : MonoBehaviour
     private float lastUpdateTime;
     private int lastPositionCount;
     private bool showPath = false;
+    private bool showStaticPath = true;
+    [SerializeField] private Toggle dynamicPath;
+    [SerializeField] private Toggle staticPath;
 
     void Start()
     {
@@ -37,12 +40,21 @@ public class LineManager : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.K) && trailingLine)
-            showPath = !showPath;
-        else if (Input.GetKeyDown(KeyCode.P) && !trailingLine && !gameObject.CompareTag("MinimapLineRenderer"))
         {
-            lineRenderer.enabled = !lineRenderer.enabled;
+            showPath = !showPath;
+            dynamicPath.isOn = showPath;
         }
 
+        else if ((Input.GetKeyDown(KeyCode.P) && !trailingLine && !gameObject.CompareTag("MinimapLineRenderer")))
+        {
+            showStaticPath = !showStaticPath;
+            staticPath.isOn = showStaticPath;
+        }
+
+        showStaticPath = staticPath.isOn;
+        lineRenderer.enabled = showStaticPath || trailingLine;
+
+        showPath = dynamicPath.isOn;
 
 
     }
